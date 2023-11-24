@@ -1,0 +1,47 @@
+#container{
+    width: 40%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 100px;
+    text-align: center;
+}
+
+#title{
+    font-size: 60px;
+    font-weight:bolder;
+    color: royalblue;
+    margin: 30px;
+}
+.input{
+    width: 270px;
+    height: 40px;
+    margin: 5px;
+    border-radius: 10px;
+}
+.Btn{
+    width: 274px;
+    height: 40px;
+    border-radius: 5px;
+    background-color: royalblue;
+    color : white;
+    font-size: 1rem;
+    margin: 10px;
+}
+#login_btn{
+    margin: 3px;
+}
+#find_btn_box{
+    width: 260px;
+    margin-left: auto;
+    margin-right: auto;
+}
+form{
+    /* border: solid 1px black; */
+    margin:0px;
+}
+#pwFind_btn{
+    /* border: solid 1px black; */
+    margin-top: 20px;
+}
+
+

@@ -1,0 +1,70 @@
+#container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 100px;
+    text-align: center;
+}
+#title{
+    font-size: 45px;
+    color: royalblue;
+}
+.input{
+    width: 250px;
+    height: 36px;
+    margin: 3px;
+    border-radius: 10px;
+    margin-right: 10px;
+}
+form{
+    margin: 0;
+}
+.input_position,.input_team{
+    width: 25px;
+    height: 25px;
+    margin:10px;
+}
+.input_div{
+    /* border:2px black solid; */
+    width: 300px;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+}
+#btn_check{
+    width: 100px;
+    height: 32px;
+    background-color: royalblue;
+    color: white;
+    font-size: 1rem;
+    border-radius: 5px;
+}
+#btn_box{
+    width: 400px;
+    text-align: start;
+    position: absolute;
+    left: 290px;
+    top: 5px;
+}
+#div_name{
+    margin-top: 20px;
+}
+.radio_box{
+    width: 300px;
+    /* border:2px black solid; */
+    text-align: start;
+    position: relative;
+    left:20px;
+}
+.Btn{
+    width: 254px;
+    height: 40px;
+    border-radius: 5px;
+    background-color: royalblue;
+    color : white;
+    font-size: 1rem;
+    margin: 5px;
+}
+
+

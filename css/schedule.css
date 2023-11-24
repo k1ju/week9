@@ -1,0 +1,330 @@
+
+/* 헤더 */
+header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: royalblue solid 4px;
+    height: 100px;
+    align-items: center;
+}
+h1{
+    color: royalblue;
+    font-size: 40px;
+    margin-left: 50px;
+}
+h1:hover{
+    cursor: pointer;
+}
+#current_date{
+    position: relative;
+    right: 50px;
+    font-weight: 600;
+    font-size: 40px;
+    color: royalblue;
+}
+#icon_menu{
+    width: 100%;
+    height: 100%;
+}
+#btn_menu{
+    margin-right: 50px;
+    width: 60px;
+    height: 50px;
+    background-color: white;
+    /* border: 0; */
+}
+#btn_menu:active{
+    transform: translate(1px,1px);
+}
+
+/* 네비게이션 */
+nav{
+    right:-304px;
+    /* right:0px; */
+
+    position: absolute;
+    border: black solid 2px;
+    width: 300px;
+    height: 800px;
+    background-color: white;
+    transition: all 0.5s ease;
+}
+.property{
+    display: inline-block;
+    width: 200px;
+    margin-top: 10px;
+    /* border: black solid 2px; */
+}
+
+.row{
+    height: 35px;
+}
+.c1{
+    width: 80px;
+}
+.c2{
+    width: 200px;
+}
+.user_info{
+    display: inline-block;
+    width: 50px;
+    border: black solid 2px;
+}
+#nav_header{
+    width: 100%;
+    height: 70px;
+    padding-left: 10px;
+    background-color: royalblue;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: white;
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+}
+.nav_section{
+    height: 50px;
+    padding-left: 10px;
+    background-color: royalblue;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: white;
+    display: flex;
+    align-items: center;
+}
+#nav_info{
+    padding: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: black;
+}
+#btn_update{
+    width: 200px;
+    height: 40px;
+    background-color: royalblue;
+    border-radius: 10px;
+    color: white;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    margin-bottom: 40px;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+#team_member{
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.member{
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+/* 메인 */
+#arrow_box{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 15px;
+}
+.icon_arrow{
+    width: 50px;
+    height: 50px;
+}
+#month_btn_box{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+.month_btn{
+    /* text-size-adjust: auto; */
+    font-size: 1.25rem;
+    font-weight: 700;
+    width: 200px;
+    height: 80px;
+    box-sizing: border-box; 
+    /* 여백,테두리가 요소 전체의 크기에 영향을 미치지 않는다, content-box(여백,테두리가 크기에 추가됨)가 기본값. */
+    background-color: royalblue;
+    color: white;
+    border: 0;
+    margin: 0.5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+}
+.name_month{
+    height: 48%;
+    /* border: black solid 2px; */
+}
+.checked{
+    display: block;
+}
+
+/* 달력내부 */
+#calender{
+    padding: 0;
+    margin-bottom: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 800px;
+    height: 600px;
+    border: royalblue solid 3px;
+}
+#owner_calender{
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: royalblue;
+    margin-bottom: auto;
+    margin-top: auto;
+}
+.tdTag{
+    margin:0;
+    padding:0;
+    border:0;
+}
+.dayBtn{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    width:100%;
+    height:100%;
+    background-color:white;
+    color:royalBlue;
+    font-weight:950;
+    font-size:1.75rem;
+    vertical-align:top;
+    display:flex;
+    flex-direction:column;
+    justify-content:start;
+    align-items:center;
+    border: solid grey 0.5px;
+}
+.scheduleLine{
+    background-color:  royalBlue;
+    width : 100%;
+    height : 30%;
+    color : white;
+    margin-top : 10px;
+    font-size : 1.5rem;
+    display : flex;
+    flex-Direction : column;
+    justify-content : center;
+}
+
+/* 모달창 */
+#modal{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    background-color: rgba(0, 0, 0,0.4);
+}
+#modal_body{
+    top:50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    width: 700px;
+    height: 700px;
+    position: absolute;
+    z-index: 1;
+    border: solid 5px black;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+    /* display: none; */
+}
+h2{
+    margin-top: 0;
+    height: 50px;
+    text-align: center;
+    background-color: royalBlue;
+    color: white;
+    font-size: 1.5rem;
+    line-height: 50px;
+}
+#close_modal{
+    width: 40px;
+    height: 40px;
+    display: block;
+    margin-left: auto;
+    background-color:  royalBlue;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 800;
+    border: 2px solid gray;
+}
+article{
+    margin-left: 30px;
+    margin-right: 30px;
+    font-size: 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 20%;
+    line-height: 50px;
+    gap: 10px;
+    border: solid gray 1px;
+}
+#modal_content{
+    height: 70%;
+}
+.modal_status{
+    width: 20px;
+    height: 20px;
+    margin-right: 20px;
+}
+.schedule_cancel{
+    text-decoration: line-through;
+}
+.schedule_update{
+    display: none
+}
+#insert_plan{
+    width: 100%;
+    height: 12%;
+    margin: 0;
+    position: fixed;
+    border: 2px solid black;
+    z-index: 5;
+    bottom: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+#plan_time{
+    width: 15%;
+    height: 60%;
+}
+#input_plan{
+    width: 50%;
+    height: 60%;
+}
+#btn_insert{
+    width: 10%;
+    height: 70%;
+    background-color:  royalBlue;
+    color: white;
+    font-size: 1rem;
+    border-radius: 5px;
+    margin-right: 2px;
+}
+.schedule_btn{
+    width: 10%;
+    height: 70%;
+    background-color:  royalBlue;
+    color: white;
+    font-size: 1rem;
+    border-radius: 5px;
+    margin-right: 2px;
+}
+
+
+
