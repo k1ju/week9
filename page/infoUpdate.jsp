@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" type="text/CSS" href="../css/infoUpdate.css">
+    <link rel="stylesheet" type="text/CSS" href="../css/common.css">
 
 </head>
 <body>

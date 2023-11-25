@@ -3,7 +3,7 @@
 
 <!-- 추가해야할부분
 
-// 클로저란 무엇인가??
+// 클로저란 
 // IIFE란 무엇인가?
 
 // 시간 다이얼 수정하기
@@ -15,7 +15,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" type="text/CSS" href="../css/schedule.css?after">
+    <link rel="stylesheet" type="text/CSS" href="../css/schedule.css">
+    <link rel="stylesheet" type="text/CSS" href="../css/common.css">
+
 </head>
 <body>
 
@@ -55,8 +57,7 @@
         <button id="btn_update" onclick="moveToDest('infoUpdate.jsp')">정보수정</button>
         <div class="nav_section">팀원목록확인</div>
         <div id="team_member">
-            <div class="member">김기주</div>
-            <div class="member">김기주</div>
+
         </div>
     </nav>
 
@@ -230,6 +231,7 @@ function getModal(){
     }
 }
 
+// 리스트준비해서 받아오기
 //모달내 일정생성하기
 function MakeArticle(e){
     for(var i=0;i< e;i++){
@@ -316,6 +318,7 @@ menuBtn.addEventListener('click',function(){
     }
 })
 // 월버튼 이벤트
+
 for(var i=0;i<12;i++){
     (function(index){
         var thisMonthBtn = document.getElementById("month_btn"+i)
@@ -338,6 +341,9 @@ closeModalBtn.addEventListener('click',function(){
     modal.style.display = "none"
     document.getElementsByTagName("body")[0].style.overflow="auto"
 })
+
+//모든 버튼 모달안에서 생성시 이벤트넣어주기
+//onclick으로 바꿔서 쓰기. addevent X
 // 취소선 이벤트
 for(var i=0;i<scheduleStatusList.length;i++){
     (function(index) {
@@ -400,10 +406,16 @@ for(var i=0;i<modalConfirmBtnList.length;i++){
             document.getElementById('update_btn'+index).style.display="inline"
             document.getElementById('delete_btn'+index).style.display="inline"
 
-        // location.href = "scheduleUpdateAction.jsp"
+            // location.href = "scheduleUpdateAction.jsp"
         })
     })(i)
 }
+
+
+
+
+
+
 
 
 </script>
