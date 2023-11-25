@@ -47,8 +47,7 @@
         <button id="btn_update" onclick="moveToDest('infoUpdate.jsp')">정보수정</button>
         <div class="nav_section">팀원목록확인</div>
         <div id="team_member">
-            <div class="member">김기주</div>
-            <div class="member">김기주</div>
+            <!-- 팀원 추가 -->
         </div>
     </nav>
 
@@ -147,7 +146,7 @@ document.getElementById("month_checked" + (selectMonth-1)).style.display="block"
 makeCalenderName(ownerName,selectYear,selectMonth)
 makeCalender(selectMonth)
 MakeArticle(5)
-var memberList=['김기주','김기주']
+var memberList=['김기주','지원']
 teamMember(memberList)
 
 //함수정의
@@ -163,7 +162,7 @@ function makeCalenderName(ownerName,selectYear,selectMonth){
 function teamMember(memberList){
     for(var i=0;i<memberList.length;i++){
         var member = document.createElement("a")
-        member.innerHTML="김기주"
+        member.innerHTML=memberList[i]
         member.href= "memberSchedule.jsp"
         document.getElementById("team_member").appendChild(member)
 

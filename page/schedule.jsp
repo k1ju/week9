@@ -57,7 +57,7 @@
         <button id="btn_update" onclick="moveToDest('infoUpdate.jsp')">정보수정</button>
         <div class="nav_section">팀원목록확인</div>
         <div id="team_member">
-
+            <!-- 팀원 추가 -->
         </div>
     </nav>
 
@@ -157,7 +157,7 @@ document.getElementById("month_checked" + (selectMonth-1)).style.display="block"
 makeCalenderName(ownerName,selectYear,selectMonth)
 makeCalender(selectMonth)
 MakeArticle(5)
-var memberList=['김기주','김기주']
+var memberList=['김기주','지원']
 teamMember(memberList)
 
 //함수정의
@@ -172,7 +172,8 @@ function makeCalenderName(ownerName,selectYear,selectMonth){
 function teamMember(memberList){
     for(var i=0;i<memberList.length;i++){
         var member = document.createElement("a")
-        member.innerHTML="김기주"
+        member.innerHTML=memberList[i]
+        member.classList.add("member")
         member.href= "memberSchedule.jsp"
         document.getElementById("team_member").appendChild(member)
     }
@@ -308,13 +309,16 @@ arrowRight.addEventListener('click',function(){
 
 })
 //슬라이드바 토글이벤트
+
 menuBtn.addEventListener('click',function(){
-    if(nav.style.right == "-304px"){
+    console.log("클릭")
+
+    if(nav.style.right == "-300px"){
         console.log("네비게이션 펼치기")
         nav.style.right = "0"
     }else {
         console.log("네비게이션 숨기기")
-        nav.style.right="-304px"
+        nav.style.right="-300px"
     }
 })
 // 월버튼 이벤트
