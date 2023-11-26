@@ -10,48 +10,37 @@
 </head>
 <body>
     <div id="container">
-        <h1 id="title">Time Tree</h1>
-        <form action="joinAction.jsp">
-            <div class="input_div">
-                <form action="../action/idCheckAction.jsp">
-                    <input id = "input_id" class="input" type="text" placeholder="아이디" name="id_value">
-                    
-                    <span id="btn_box">
-                        <button id="btn_check">중복확인</button>
-                        <span id="id_banner"></span>
-                    </span>
-                </form>
-            </div>
-            <div id="" class="input_div">
-                <input id = "input_pw" class="input" type="password" placeholder="비밀번호" name="pw_value">
-            </div>
-            <div class="input_div">
-                <input id = "input_pw_check" class="input" type="password" placeholder="비밀번호 확인">
-            </div>
-            <div id = "div_name" class="input_div">
-                <input id = "input_name" class="input" type="text" placeholder="이름" name="name_value">
-            </div>
-            <div class="input_div">
-                <input id = "input_phonenumber" class="input" type="text" placeholder="연락처" name="phonenumber_value">
-            </div>
-            <div class="radio_box">
+    <h1 id="title">Time Tree</h1>
+        <form class = "join_form" action="joinAction.jsp">
+            <form action="../action/idCheckAction.jsp">
+                <input id = "input_id" class="input" type="text" placeholder="아이디" name="id_value">
+                
+                <span id="btn_box">
+                    <button id="btn_check">중복확인</button>
+                    <span id="id_banner"></span>
+                </span>
+            </form>
+
+            <input id = "input_pw" class="input" type="password" placeholder="비밀번호" name="pw_value">
+            <input id = "input_pw_check" class="input" type="password" placeholder="비밀번호 확인">
+            <input id = "input_name" class="input" type="text" placeholder="이름" name="name_value">
+            <input id = "input_phonenumber" class="input" type="text" placeholder="연락처" name="phonenumber_value">
+            
+            <div>
                 부서:
                 <input class="input_team" type="radio" value="스테이지어스" name="team_value">스테이지어스
                 <input class="input_team" type="radio" value="네이버" name="team_value">네이버
             </div>
-            <div class="radio_box">
-                직급:
-                <input class="input_position" type="radio" value="팀원" name="position_value">팀원
-                <input class="input_position" type="radio" value="팀장" name="position_value">팀장
-            </div>
-            <div>
-                <input id="btn_join" class="Btn" type="submit" value="회원가입">
-            </div>
-            
-        </form>
-        <div>
-            <button id="btn_login" class="Btn" onclick="moveToDest('login.jsp')" >로그인</button>
+        <div class="radio_box">
+            직급:
+            <input class="input_position" type="radio" value="팀원" name="position_value">팀원
+            <input class="input_position" type="radio" value="팀장" name="position_value">팀장
         </div>
+            <input id="btn_join" class="Btn" type="submit" value="회원가입">
+
+        
+    </form>
+
     </div>
 
 <script>
@@ -139,9 +128,9 @@ document.getElementById("btn_check").addEventListener('click',function(){
     }
 })
 //로그인 버튼
-document.getElementById("btn_login").addEventListener('click',function(){
-    event.preventDefault()
-})
+// document.getElementById("btn_login").addEventListener('click',function(){
+//     event.preventDefault()
+// })
 
 function moveToDest(e){
     console.log(e)

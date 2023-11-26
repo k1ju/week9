@@ -17,8 +17,8 @@
     border-radius: 10px;
     margin-right: 10px;
 }
-form{
-    margin: 0;
+.join_form{
+    display: flex;
 }
 .input_position,.input_team{
     width: 25px;
@@ -40,13 +40,13 @@ form{
     font-size: 1rem;
     border-radius: 5px;
 }
-#btn_box{
+/* #btn_box{
     width: 400px;
     text-align: start;
     position: absolute;
     left: 290px;
     top: 5px;
-}
+} */
 #div_name{
     margin-top: 20px;
 }
