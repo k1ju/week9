@@ -1,0 +1,29 @@
+[33mcommit 196e73b411eb5462de0702a705492e1be921f100[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: k1ju <gksrlwn98@naver.com>
+Date:   Sun Nov 26 01:32:00 2023 +0000
+
+    css 불필요한 div제거, flex,table로 정렬
+
+[33mcommit c73a793faa46c553e9c27a36619d1f18ba6627c6[m[33m ([m[1;31morigin/master[m[33m)[m
+Author: k1ju <gksrlwn98@naver.com>
+Date:   Sat Nov 25 16:55:53 2023 +0000
+
+    css 정렬 flex로수정, 각요소 크기 px에서 상대크기로 수정
+
+[33mcommit 99b871277ee535593bf1ac3595d8c42f9ec31647[m
+Author: k1ju <gksrlwn98@naver.com>
+Date:   Sat Nov 25 14:59:15 2023 +0000
+
+    common.css 추가
+
+[33mcommit 095d10a2446a4eac52864f248b8bb6e17c9bc13b[m
+Author: k1ju <gksrlwn98@naver.com>
+Date:   Fri Nov 24 13:32:02 2023 +0000
+
+    my second commit
+
+[33mcommit c1e56ca15a3c6f260b6b3038b3f14cbfcc2de632[m
+Author: k1ju <gksrlwn98@naver.com>
+Date:   Sun Nov 19 06:13:06 2023 +0000
+
+    My First Commit
