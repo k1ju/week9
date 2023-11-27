@@ -25,7 +25,7 @@
     <header>
         <h1 onclick="moveToDest('schedule.jsp')">Time Tree</h1>
         <div id="current_date"></div>
-        <button id="btn_menu">
+        <button id="btn_menu" onclick="menuBarEvent()">
             <Img id="icon_menu" src="../image/icon_menu2.png">
         </button>
     </header>
@@ -64,13 +64,9 @@
 <!-- 메인 -->
     <main>
         <div id="arrow_box">
-            <button id="arrow_left_btn">
-                <Img class="icon_arrow" src="../image/arrow_left_icon.png">
-            </button>
+            <Img class="icon_arrow" onclick="beforeYearEvent()" src="../image/arrow_left_icon.png">
             <p id="owner_calender"></p>
-            <button id="arrow_right_btn">
-                <Img class="icon_arrow" src="../image/arrow_right_icon.png">
-            </button>
+            <Img class="icon_arrow" onclick="afterYearEvent()" src="../image/arrow_right_icon.png">
         </div>
 
         <div id="month_btn_box">
@@ -298,29 +294,32 @@ function MakeArticle(e){
 //이벤트설정
 
 // 다음연도, 이전연도 버튼 이벤트
-arrowLeft.addEventListener('click',function(){
+function beforeYearEvent(){
     selectYear -= 1
     makeCalenderName(ownerName,selectYear,selectMonth)
+}
 
-})
-arrowRight.addEventListener('click',function(){
+function afterYearEvent(){
     selectYear += 1
     makeCalenderName(ownerName,selectYear,selectMonth)
+}
 
-})
+
 //슬라이드바 토글이벤트
 
-menuBtn.addEventListener('click',function(){
-    console.log("클릭")
 
-    if(nav.style.right == "-300px"){
-        console.log("네비게이션 펼치기")
-        nav.style.right = "0"
-    }else {
-        console.log("네비게이션 숨기기")
-        nav.style.right="-300px"
-    }
-})
+function menuBarEvent(){
+    var navStyleRight = window.getComputedStyle(nav).getPropertyValue("right")
+
+if(navStyleRight == "-300px"){
+    console.log("네비게이션 펼치기")
+    nav.style.right = "0"
+}else {
+    console.log("네비게이션 숨기기")
+    nav.style.right="-300px"
+}
+}
+
 // 월버튼 이벤트
 
 for(var i=0;i<12;i++){
@@ -345,6 +344,10 @@ closeModalBtn.addEventListener('click',function(){
     modal.style.display = "none"
     document.getElementsByTagName("body")[0].style.overflow="auto"
 })
+function closeModalEvent(e){
+    
+}
+
 
 //모든 버튼 모달안에서 생성시 이벤트넣어주기
 //onclick으로 바꿔서 쓰기. addevent X

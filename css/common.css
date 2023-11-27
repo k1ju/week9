@@ -37,12 +37,13 @@ h1:hover{
     height: 50px;
     background-color: white;
 }
-#btn_menu:active{
+#btn_menu:active {
     transform: translate(1px,1px);
 }
 
 
 /* 네비게이션 */
+
 nav{
     right:-300px;
     /* right:0px; */
