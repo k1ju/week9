@@ -12,31 +12,71 @@
     <div id="container">
     <h1 id="title">Time Tree</h1>
         <form class = "join_form" action="joinAction.jsp">
-            <form action="../action/idCheckAction.jsp">
-                <input id = "input_id" class="input" type="text" placeholder="아이디" name="id_value">
-                
-                <span id="btn_box">
-                    <button id="btn_check">중복확인</button>
-                    <span id="id_banner"></span>
-                </span>
-            </form>
+         
 
-            <input id = "input_pw" class="input" type="password" placeholder="비밀번호" name="pw_value">
-            <input id = "input_pw_check" class="input" type="password" placeholder="비밀번호 확인">
-            <input id = "input_name" class="input" type="text" placeholder="이름" name="name_value">
-            <input id = "input_phonenumber" class="input" type="text" placeholder="연락처" name="phonenumber_value">
-            
-            <div>
-                부서:
-                <input class="input_team" type="radio" value="스테이지어스" name="team_value">스테이지어스
-                <input class="input_team" type="radio" value="네이버" name="team_value">네이버
-            </div>
-        <div class="radio_box">
-            직급:
-            <input class="input_position" type="radio" value="팀원" name="position_value">팀원
-            <input class="input_position" type="radio" value="팀장" name="position_value">팀장
-        </div>
-            <input id="btn_join" class="Btn" type="submit" value="회원가입">
+        <table>
+            <tr>
+                <th></th>
+                <form action="idCheckAction.jsp">
+                    <td class="c2">
+                        <input id = "input_id"  type="text" placeholder="아이디" name="id_value">
+                    </td>
+                    <td class="c3">
+                        <input class = "check_btn" type="submit" value="중복확인" >
+                    </td>
+                    <td class="c4">
+                        <span id="id_banner">사용가능한 아이디</span>
+                    </td>
+                </form>
+            </tr>
+            <tr>
+                <th></th>
+                <td class="c2">
+                    <input id = "input_pw"  type="password" placeholder="비밀번호" name="pw_value">
+                </td>
+            </tr>
+            <tr>
+                <th></th>
+                <td class="c2">
+                    <input id = "input_pw_check"  type="password" placeholder="비밀번호 확인">
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+            <tr>
+                <th></th>
+                <td class="c2 input_name">
+                    <input id = "input_name"  type="text" placeholder="이름" name="name_value">
+                </td>
+            </tr>
+            <tr>
+                <th></th>
+                <td class="c2">
+                    <input id = "input_phonenumber"  type="text" placeholder="연락처" name="phonenumber_value">
+                </td>
+            </tr>
+            <tr>
+                <th>부서</th>
+                <td class="c2 team">
+                    <input class="input_team" type="radio" value="스테이지어스" name="team_value">스테이지어스
+                    <input class="input_team" type="radio" value="네이버" name="team_value">네이버
+                </td>
+            </tr>
+            <tr>
+                <th>직급</th>
+                <td class="c2 position">
+                    <input class="input_position" type="radio" value="팀원" name="position_value">팀원
+                    <input class="input_position" type="radio" value="팀장" name="position_value">팀장
+                </td>
+            </tr>
+            <tr>
+                <th></th>
+                <td class="c2">
+                    <input id="btn_join" class="Btn" type="submit" value="회원가입">
+                </td>
+            </tr>
+        </table>
 
         
     </form>
@@ -101,16 +141,13 @@ document.getElementById("btn_join").addEventListener('click',function(){
     //     alert("연락처 10,11글자 제한")
     }else if(pw != pw_check){
         alert("비밀번호가 일치하지 않습니다")
-    }else if(pw == pw_check){
-        alert("비밀번호가 일치합니다")
     }else if(checkBtn.disabled==false){ // 아이디 중복확인이 안되어있다면, 
         alert("아이디 중복검사를 진행해주세요")
     }
 })
 
 //중복확인 버튼
-document.getElementById("btn_check").addEventListener('click',function(){
-    event.preventDefault()
+function idCheckEvent(){
     id = document.getElementById("input_id").value
 
     if( (id!="") && (!!id) && (id != undefined)){
@@ -126,11 +163,8 @@ document.getElementById("btn_check").addEventListener('click',function(){
         idBanner.innerHTML = "중복된 아이디"
         idBanner.style.color = "red"
     }
-})
-//로그인 버튼
-// document.getElementById("btn_login").addEventListener('click',function(){
-//     event.preventDefault()
-// })
+}
+
 
 function moveToDest(e){
     console.log(e)
