@@ -5,9 +5,8 @@
 <%@ page import="java.sql.ResultSet" %>
 <%
 
-String userName = request.getParameter("name_value");
-String userPhonenumber = request.getParameter("phonenumber_value");
-String userID = null;
+String userID = request.getParameter("id_value");
+String userPw = request.getParameter("pw_value");
 
 try{
     if(userName.equals("") || userPhonenumber.equals("")){
@@ -44,13 +43,11 @@ try{
 
 }catch(NullPointerException e){ // 널포인터에러 발생시
     response.sendRedirect("../page/idFind.jsp");
-    
     rs.close();
     query.close();
     connect.close();
 }catch(Exception e){
     response.sendRedirect("../page/idFind.jsp");
-
     rs.close();
     query.close();
     connect.close();
@@ -66,15 +63,7 @@ try{
     
     <script>
 
-        var userID = "<%=userID%>"
 
-        if("<%=userID%>" != ""){
-            alert("회원님의 아이디는"+ userID)
-            location.href="../page/idFind.jsp"
-        }else{
-            alert("일치하는 회원정보없음")
-            location.href="../page/idFind.jsp"
-        }
     </script>
 </body>
 </html>

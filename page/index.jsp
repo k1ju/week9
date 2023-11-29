@@ -12,20 +12,11 @@
     <div id="container">
         <h1 id="title">Time Tree</h1>
         <form action="schedule.jsp" onsubmit="return checkEvent()">
-            <div>
-                <input class="input" id="input_id" type="text" placeholder="ID" name="id_value">
-            </div>
-
-            <div>
-                <input class="input" id="input_pw" type="password" placeholder="PASSWORD" name="pw_value">
-            </div>
-      
-                <input id="login_btn" class="Btn" type="submit" value="로그인">
-   
+            <input class="input" id="input_id" type="text" placeholder="ID" name="id_value">
+            <input class="input" id="input_pw" type="password" placeholder="PASSWORD" name="pw_value">
+            <input id="login_btn" class="Btn" type="submit" value="로그인">
         </form>
-      
-            <button id="join_btn" class="Btn" onclick="moveToDest('join.jsp')" >회원가입</button>
-       
+        <button id="join_btn" class="Btn" onclick="moveToDest('join.jsp')" >회원가입</button>
         <div id="find_btn_box">
             <button id="id_button" onclick="moveToDest('idFind.jsp')">아이디찾기</button>
             <button id="pw_button" onclick="moveToDest('pwFind.jsp')">비밀번호찾기</button>
