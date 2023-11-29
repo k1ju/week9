@@ -67,12 +67,9 @@ try{
 <body>
     
 <script>
-    var session = "<%=session.getAttribute('userIdx')%>"
-    console.log(session)
 
     alert("일치하는 회원정보 없음")
-    // location.href="../page/index.jsp"
-
+    location.href="../page/index.jsp"
 
 </script>
 </body>

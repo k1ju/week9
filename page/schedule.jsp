@@ -18,7 +18,7 @@ PreparedStatement query = null;
 Connection connect = null;
 ArrayList<ArrayList<String>> scheduleList = new ArrayList<ArrayList<String>>();
 
-//try{
+try{
     if(session.getAttribute("userIdx") != null){
         userIdx = (String)session.getAttribute("userIdx");
     }else{
@@ -43,9 +43,9 @@ ArrayList<ArrayList<String>> scheduleList = new ArrayList<ArrayList<String>>();
         scheduleList.add(schedule);
     }
 
-//}catch(Exception e){
+}catch(Exception e){
     response.sendRedirect("index.jsp");
-//}finally{
+}finally{
     if (rs != null) {
         rs.close();
     }
@@ -55,7 +55,7 @@ ArrayList<ArrayList<String>> scheduleList = new ArrayList<ArrayList<String>>();
     if (connect != null) {
         connect.close();
     }
-//}
+}
 %>
 
 
@@ -104,6 +104,7 @@ ArrayList<ArrayList<String>> scheduleList = new ArrayList<ArrayList<String>>();
         <div id="team_member">
             <!-- 팀원 추가 -->
         </div>
+        <button class="logout_btn" onclick="moveToDest('../action/logoutAction.jsp')">로그아웃</button>
     </nav>
 <!-- 메인 -->
     <main>
