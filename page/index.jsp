@@ -11,7 +11,7 @@
 <body>
     <div id="container">
         <h1 id="title">Time Tree</h1>
-        <form action="schedule.jsp" onsubmit="return checkEvent()">
+        <form action="../action/loginAction.jsp" onsubmit="return checkEvent()">
             <input class="input" id="input_id" type="text" placeholder="ID" name="id_value">
             <input class="input" id="input_pw" type="password" placeholder="PASSWORD" name="pw_value">
             <input id="login_btn" class="Btn" type="submit" value="로그인">

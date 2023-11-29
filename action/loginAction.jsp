@@ -7,13 +7,18 @@
 
 String userID = request.getParameter("id_value");
 String userPw = request.getParameter("pw_value");
+ResultSet rs = null;
+PreparedStatement query = null;
+Connection connect = null;
+
 String errMessage = null;
+
 try{
     if(userID.equals("") || userPw.equals("")){
         throw new NullPointerException();
     }else{
-        userID = userName.trim();
-        userPw = userPhonenumber.trim();
+        userID = userID.trim();
+        userPw = userPw.trim();
     }
     if(userID.length()>20){
         throw new Exception();
@@ -27,35 +32,32 @@ try{
     String sql = "SELECT * FROM user WHERE id = ? AND pw = ? ";
 
     Class.forName("com.mysql.jdbc.Driver"); //db연결
-    Connection connect = DriverManager.getConnection(dbURL,dbID,dbPassword);
-    PreparedStatement query = connect.prepareStatement(sql);
+    connect = DriverManager.getConnection(dbURL,dbID,dbPassword);
+    query = connect.prepareStatement(sql);
     query.setString(1,userID);
     query.setString(2,userPw);
-    ResultSet rs = query.executeQuery();
+    rs = query.executeQuery();
 
     if(rs.next()){
-        userIdx = rs.getstring(1);
-        session.setAttribute("userIdx",userIdx)
-        response.sendRedirect("../page/schedule.jsp")
-
-    }else{
-        throw new Exception();
+        String userIdx = rs.getString(1);
+        session.setAttribute("userIdx",userIdx);
+        response.sendRedirect("../page/schedule.jsp");
     }
-
-    rs.close();
-    query.close();
-    connect.close();
 
 }catch(NullPointerException e){ // 널포인터에러 발생시
     response.sendRedirect("../page/index.jsp");
-    rs.close();
-    query.close();
-    connect.close();
 }catch(Exception e){
     response.sendRedirect("../page/index.jsp");
-    rs.close();
-    query.close();
-    connect.close();
+}finally{
+    if (rs != null) {
+        rs.close();
+    }
+    if (query != null) {
+        query.close();
+    }
+    if (connect != null) {
+        connect.close();
+    }
 }
 %>
 
@@ -67,8 +69,8 @@ try{
 <body>
     
 <script>
-    alert("로그인실패")
-    location.href="../page/login.jsp"
+    alert("일치하는 회원정보 없음")
+    location.href="../page/index.jsp"
 
 
 </script>
