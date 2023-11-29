@@ -16,6 +16,11 @@ String userIdx = null;
 ResultSet rs = null;
 PreparedStatement query = null;
 Connection connect = null;
+String userName = null;
+String userPhonenumber = null;
+String userPosition = null;
+String userTeam = null;
+
 ArrayList<ArrayList<String>> scheduleList = new ArrayList<ArrayList<String>>();
 
 try{
@@ -26,7 +31,8 @@ try{
     }
     Class.forName("com.mysql.jdbc.Driver"); //db연결
     connect = DriverManager.getConnection("jdbc:mysql://localhost/week9","stageus","1234");
-    String sql = "SELECT s.* FROM schedule s LEFT JOIN user u ON s.user_idx = u.idx WHERE s.user_idx = ? ";
+    String sql = "SELECT s.*,u.name,u.phonenumber,u.position,u.team FROM schedule s ";
+    sql += " LEFT JOIN user u ON s.user_idx = u.idx WHERE s.user_idx = ? ";
     query = connect.prepareStatement(sql);
     query.setString(1,userIdx);
     rs = query.executeQuery();
@@ -36,7 +42,11 @@ try{
         String date = rs.getString("date");
         String content = rs.getString("content");
         String executionStatus = rs.getString("execution_status");
-            
+        userName = rs.getString("name");
+        userPhonenumber = rs.getString("phonenumber");
+        userPosition = rs.getString("position");
+        userTeam = rs.getString("team");
+
         schedule.add(date);
         schedule.add(content);
         schedule.add(executionStatus);
@@ -84,19 +94,19 @@ try{
         <table id="nav_info">
             <tr class="row">
                 <td class="c1">이름:</td>
-                <td class="2c">김기주</td>
+                <td class="2c"><%=userName%></td>
             </tr>
             <tr class="row">
                 <td class="c1">연락처:</td>
-                <td class="2c">010-0000-0000</td>
+                <td class="2c"><%=userPhonenumber.substring(0,3)%>-<%=userPhonenumber.substring(3,7)%>-<%=userPhonenumber.substring(7,11) %></td>
             </tr>
             <tr class="row">
                 <td class="c1">직급:</td>
-                <td class="2c">팀원</td>
+                <td class="2c"><%=userPosition%></td>
             </tr>
             <tr class="row">
                 <td class="c1">부서:</td>
-                <td class="2c">스테이지어스</td>
+                <td class="2c"><%=userTeam%></td>
             </tr>
         </table>
         <button id="btn_update" onclick="moveToDest('infoUpdate.jsp')">정보수정</button>
@@ -122,8 +132,6 @@ try{
 </body>
 <script>
 
-console.log("<%=userIdx%>")
-
 date = new Date();
 var selectYear = date.getFullYear();
 var selectMonth = date.getMonth() + 1;
@@ -137,8 +145,6 @@ var ownerCalender = document.getElementById("owner_calender")
 var ownerName = "기주"
 var calender = document.getElementById("calender")
 var dayBtnList = document.getElementsByClassName("dayBtn")
-
-
 
 //현재날짜 표시  
 document.getElementById("current_date").innerHTML = selectYear + "-" +  selectMonth + "-" + selectDay;
