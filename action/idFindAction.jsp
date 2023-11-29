@@ -8,6 +8,9 @@
 String userName = request.getParameter("name_value");
 String userPhonenumber = request.getParameter("phonenumber_value");
 String userID = null;
+ResultSet rs = null;
+PreparedStatement query = null;
+Connection connect = null;
 
 try{
     if(userName.equals("") || userPhonenumber.equals("")){
@@ -28,32 +31,33 @@ try{
     String sql = "SELECT id FROM user WHERE name = ? AND phonenumber = ? ";
 
     Class.forName("com.mysql.jdbc.Driver"); //db연결
-    Connection connect = DriverManager.getConnection(dbURL,dbID,dbPassword);
-    PreparedStatement query = connect.prepareStatement(sql);
+    connect = DriverManager.getConnection(dbURL,dbID,dbPassword);
+    query = connect.prepareStatement(sql);
     query.setString(1,userName);
     query.setString(2,userPhonenumber);
-    ResultSet rs = query.executeQuery();
+    rs = query.executeQuery();
 
     if(rs.next()){
         userID = rs.getString(1);
     }
 
-    rs.close();
-    query.close();
-    connect.close();
 
 }catch(NullPointerException e){ // 널포인터에러 발생시
     response.sendRedirect("../page/idFind.jsp");
     
-    rs.close();
-    query.close();
-    connect.close();
 }catch(Exception e){
     response.sendRedirect("../page/idFind.jsp");
 
-    rs.close();
-    query.close();
-    connect.close();
+}finally{
+    if (rs != null) {
+        rs.close();
+    }
+    if (query != null) {
+        query.close();
+    }
+    if (connect != null) {
+        connect.close();
+    }
 }
 %>
 

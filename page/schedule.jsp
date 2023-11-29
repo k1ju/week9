@@ -1,15 +1,64 @@
 <%@ page language="java" contentType="text/html" pageEncoding="utf-8" %>
+<!-- 데이터베이스 탐색라이브러리 -->
+<%@ page import="java.sql.DriverManager" %>
+<!-- db연결 라이브러리 -->
+<%@ page import="java.sql.Connection" %>
+<!-- sql전송 라이브러리 -->
+<%@ page import="java.sql.PreparedStatement" %>
+<!-- 데이터받아오기 라이브러리 -->
+<%@ page import="java.sql.ResultSet" %>
+<%@ page import="java.util.ArrayList" %>
+
+<%
+request.setCharacterEncoding("utf-8");
+
+String userIdx = null;
+ResultSet rs = null;
+PreparedStatement query = null;
+Connection connect = null;
+ArrayList<ArrayList<String>> scheduleList = new ArrayList<ArrayList<String>>();
+
+//try{
+    if(session.getAttribute("userIdx") != null){
+        userIdx = (String)session.getAttribute("userIdx");
+    }else{
+        throw new Exception();
+    }
+    Class.forName("com.mysql.jdbc.Driver"); //db연결
+    connect = DriverManager.getConnection("jdbc:mysql://localhost/week9","stageus","1234");
+    String sql = "SELECT s.* FROM schedule s LEFT JOIN user u ON s.user_idx = u.idx WHERE s.user_idx = ? ";
+    query = connect.prepareStatement(sql);
+    query.setString(1,userIdx);
+    rs = query.executeQuery();
+    
+    while(rs.next()){
+        ArrayList<String> schedule = new ArrayList<String>();
+        String date = rs.getString("date");
+        String content = rs.getString("content");
+        String executionStatus = rs.getString("execution_status");
+            
+        schedule.add(date);
+        schedule.add(content);
+        schedule.add(executionStatus);
+        scheduleList.add(schedule);
+    }
+
+//}catch(Exception e){
+    response.sendRedirect("index.jsp");
+//}finally{
+    if (rs != null) {
+        rs.close();
+    }
+    if (query != null) {
+        query.close();
+    }
+    if (connect != null) {
+        connect.close();
+    }
+//}
+%>
 
 
-<!-- 추가해야할부분
-
-// 클로저란 
-// IIFE란 무엇인가?
-
-// 시간 다이얼 수정하기
-
-
--->
 
 <head>
     <meta charset="UTF-8">
@@ -28,7 +77,6 @@
             <Img id="icon_menu" src="../image/icon_menu2.png">
         </button>
     </header>
-
 <!-- 슬라이드바 -->
     <nav id="navigation">
         <div id="nav_header">메뉴</div>
@@ -57,7 +105,6 @@
             <!-- 팀원 추가 -->
         </div>
     </nav>
-
 <!-- 메인 -->
     <main>
         <div id="arrow_box">
@@ -65,17 +112,16 @@
             <p id="owner_calender"></p>
             <Img class="icon_arrow" onclick="afterYearEvent()" src="../image/arrow_right_icon.png">
         </div>
-
         <div id="month_btn_box">
         </div>
-
         <table id="calender">
         </table>
     </main>
 
-
 </body>
 <script>
+
+console.log("<%=userIdx%>")
 
 date = new Date();
 var selectYear = date.getFullYear();

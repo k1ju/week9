@@ -11,8 +11,6 @@ ResultSet rs = null;
 PreparedStatement query = null;
 Connection connect = null;
 
-String errMessage = null;
-
 try{
     if(userID.equals("") || userPw.equals("")){
         throw new NullPointerException();
@@ -69,8 +67,11 @@ try{
 <body>
     
 <script>
+    var session = "<%=session.getAttribute('userIdx')%>"
+    console.log(session)
+
     alert("일치하는 회원정보 없음")
-    location.href="../page/index.jsp"
+    // location.href="../page/index.jsp"
 
 
 </script>
