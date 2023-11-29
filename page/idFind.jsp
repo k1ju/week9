@@ -12,15 +12,12 @@
     <div id="container">
         <h1 id="title">Time Tree</h1>
         <form action="../action/idFindAction.jsp" onsubmit="return idFindEvent()">
-            <div>
-                <input id="name_value" class="input" type="text" placeholder="이름" name="name_value">
-            </div>
-            <div>
-                <input id="phonenumber_value" class="input" type="text" placeholder="연락처" name="phonenumber_value">
-            </div>
+            <input id="name_value" class="input" type="text" placeholder="이름" name="name_value">
+            <input id="phonenumber_value" class="input" type="text" placeholder="연락처" name="phonenumber_value">
             <input id="idFind_btn" class="Btn" type="submit" value="아이디찾기">
         </form>
     </div>
+</body>
 
 <script>
 function idFindEvent(){

@@ -83,6 +83,7 @@
         </div>
     </section>
 
+</body>
 <script>
 
 date = new Date();

@@ -23,7 +23,6 @@
     <nav id="navigation">
         <div id="nav_header">메뉴</div>
         <div class="nav_section">내정보확인</div>
-
         <table id="nav_info">
             <tr class="row">
                 <td class="c1">이름:</td>
@@ -96,6 +95,7 @@
 
         </div>
     </main>
+</body>
 
 <script>
 

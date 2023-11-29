@@ -29,6 +29,7 @@
         </form>
     </section>
 
+</body>
 <script>
 //모달 변수
 // [날짜,일정,수행여부]

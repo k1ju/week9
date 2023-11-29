@@ -17,7 +17,6 @@
     <title>Document</title>
     <link rel="stylesheet" type="text/CSS" href="../css/schedule.css">
     <link rel="stylesheet" type="text/CSS" href="../css/common.css">
-
 </head>
 <body>
 
@@ -34,7 +33,6 @@
     <nav id="navigation">
         <div id="nav_header">메뉴</div>
         <div class="nav_section">내정보확인</div>
-
         <table id="nav_info">
             <tr class="row">
                 <td class="c1">이름:</td>
@@ -52,7 +50,6 @@
                 <td class="c1">부서:</td>
                 <td class="2c">스테이지어스</td>
             </tr>
-
         </table>
         <button id="btn_update" onclick="moveToDest('infoUpdate.jsp')">정보수정</button>
         <div class="nav_section">팀원목록확인</div>
@@ -77,7 +74,7 @@
     </main>
 
 
-
+</body>
 <script>
 
 date = new Date();

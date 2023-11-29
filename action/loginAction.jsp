@@ -7,34 +7,39 @@
 
 String userID = request.getParameter("id_value");
 String userPw = request.getParameter("pw_value");
-
+String errMessage = null;
 try{
-    if(userName.equals("") || userPhonenumber.equals("")){
+    if(userID.equals("") || userPw.equals("")){
         throw new NullPointerException();
     }else{
-        userName = userName.trim();
-        userPhonenumber = userPhonenumber.replaceAll("[^0-9]","");
+        userID = userName.trim();
+        userPw = userPhonenumber.trim();
     }
-    if(userName.length() > 10){
+    if(userID.length()>20){
         throw new Exception();
-    }else if(userPhonenumber.length() > 13 || userPhonenumber.length() < 10){
+    }else if(userPw.length()>20){
         throw new Exception();
     }
 
     String dbURL = "jdbc:mysql://localhost/week9";
     String dbID = "stageus";
     String dbPassword = "1234";
-    String sql = "SELECT id FROM user WHERE name = ? AND phonenumber = ? ";
+    String sql = "SELECT * FROM user WHERE id = ? AND pw = ? ";
 
     Class.forName("com.mysql.jdbc.Driver"); //db연결
     Connection connect = DriverManager.getConnection(dbURL,dbID,dbPassword);
     PreparedStatement query = connect.prepareStatement(sql);
-    query.setString(1,userName);
-    query.setString(2,userPhonenumber);
+    query.setString(1,userID);
+    query.setString(2,userPw);
     ResultSet rs = query.executeQuery();
 
     if(rs.next()){
-        userID = rs.getString(1);
+        userIdx = rs.getstring(1);
+        session.setAttribute("userIdx",userIdx)
+        response.sendRedirect("../page/schedule.jsp")
+
+    }else{
+        throw new Exception();
     }
 
     rs.close();
@@ -42,12 +47,12 @@ try{
     connect.close();
 
 }catch(NullPointerException e){ // 널포인터에러 발생시
-    response.sendRedirect("../page/idFind.jsp");
+    response.sendRedirect("../page/index.jsp");
     rs.close();
     query.close();
     connect.close();
 }catch(Exception e){
-    response.sendRedirect("../page/idFind.jsp");
+    response.sendRedirect("../page/index.jsp");
     rs.close();
     query.close();
     connect.close();
@@ -61,9 +66,11 @@ try{
 </head>
 <body>
     
-    <script>
+<script>
+    alert("로그인실패")
+    location.href="../page/login.jsp"
 
 
-    </script>
+</script>
 </body>
 </html>

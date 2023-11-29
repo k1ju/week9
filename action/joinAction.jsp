@@ -7,7 +7,7 @@
     String userPw = request.getParameter("pw_value");
     String userPwCheck = request.getParameter("pw_check_value");
     String userName = request.getParameter("name_value");
-    String userPhonenumber = request.getParameter("phonenumber_value").replaceAll("^[0-9]","");;
+    String userPhonenumber = request.getParameter("phonenumber_value").replaceAll("[^0-9]","");
     String userTeam = request.getParameter("team_value");
     String userPosition = request.getParameter("position_value");
     int errorCode = 1;

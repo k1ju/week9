@@ -17,6 +17,8 @@
             <input id="pwFind_btn" class="Btn" type="submit" value="비밀번호찾기">
         </form>
     </div>
+</body>
+
 <script>
 
 function pwFindEvent(){

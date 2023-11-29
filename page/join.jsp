@@ -94,6 +94,7 @@
         </form>
 
     </div>
+</body>
 
 <script>
 
@@ -113,8 +114,6 @@ function checkEvent(){
     var phonenumber = document.getElementById("input_phonenumber").value.replace(/[^0-9]/g,"")
     var teamTagList = document.getElementsByName("team_value")
     var positionTagList = document.getElementsByName("position_value")
-
-    console.log(phonenumber)
 
     for(var i=0;i<teamTagList.length;i++){ // 체크된 radio 찾기
         if(teamTagList[i].checked == true){

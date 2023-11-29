@@ -22,6 +22,7 @@
             <button id="pw_button" onclick="moveToDest('pwFind.jsp')">비밀번호찾기</button>
         </div>
     </div>
+</body>
 
 <script>
     function moveToDest(e){
@@ -35,12 +36,11 @@
 
         console.log("로그인 검사시작")
 
-        if(!id || !pw){ //
+        if(!id || !pw){ 
             console.log("하나라도 빈값이라면")
             alert("값을 입력해주세요")
             return false
-        }
-        else if(id.length>20){
+        }else if(id.length>20){
             alert("아이디 글자수제한 20글자")
             return false
         }else if(pw.length>20){
