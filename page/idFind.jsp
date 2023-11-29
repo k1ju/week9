@@ -11,41 +11,36 @@
 <body>
     <div id="container">
         <h1 id="title">Time Tree</h1>
-        <form action="../action/idFindAction.jsp">
+        <form action="../action/idFindAction.jsp" onsubmit="return idFindEvent()">
             <div>
-                <input id = "name_value" class="input" type="text" placeholder="이름" name="name_value">
+                <input id="name_value" class="input" type="text" placeholder="이름" name="name_value">
             </div>
-
             <div>
-                <input class="input" type="password" placeholder="연락처" name="phonenumber_value">
+                <input id="phonenumber_value" class="input" type="text" placeholder="연락처" name="phonenumber_value">
             </div>
-      
-                <input id="idFind_btn" class="Btn" type="submit" value="아이디찾기">
+            <input id="idFind_btn" class="Btn" type="submit" value="아이디찾기">
         </form>
-      
-       
-        
     </div>
 
-    <script>
-        document.getElementById("idFind_btn").addEventListener('click',function(event){
+<script>
+function idFindEvent(){
+    var nameValue = document.getElementById("name_value").value.replace(/ /g,"")
+    var phonenumberValue = document.getElementById("phonenumber_value").value.replace(/[^0-9]/g,"")
+    console.log(nameValue)
+    console.log(phonenumberValue)
 
-            var nameValue = document.getElementsByName("name_value")[0].value  
-            var phonenumberValue = document.getElementsByName("phonenumber_value")[0].value
-
-            if(nameValue.trim()==='' || phonenumberValue.trim()===''){
-                event.preventDefault()
-                alert("값을 입력하세요")
-            } else if(nameValue.length>10){
-                event.preventDefault()
-                alert("이름 최대 10글자 제한")
-            } else if(phonenumberValue.length>13 || phonenumberValue <10){
-                event.preventDefault()
-                alert("연락처 글자 제한 10~13글자")
-            }
-        })
-
-        
-    </script>
+    if(nameValue==="" || phonenumberValue===""){
+        alert("값을 입력하세요")
+        return false
+    } else if(nameValue.length>10){
+        alert("이름 최대 10글자 제한")
+        return false
+    } else if(phonenumberValue.length>13 || phonenumberValue <10){
+        alert("연락처 글자 제한 10~13글자")
+        return false
+    }
+}
+    
+</script>
 </body>
 </html>
