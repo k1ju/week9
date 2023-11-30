@@ -9,7 +9,6 @@
 <%@ page import="java.sql.ResultSet"%>
 <%@ page import="java.util.ArrayList" %>
 
-
 <%
 request.setCharacterEncoding("utf-8");
 

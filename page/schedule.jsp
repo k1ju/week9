@@ -9,6 +9,8 @@
 <%@ page import="java.sql.ResultSet" %>
 <%@ page import="java.util.ArrayList" %>
 
+<!-- 세션없이 접근하는 경우 처리 -->
+
 <%
 request.setCharacterEncoding("utf-8");
 
@@ -110,10 +112,6 @@ try{
             </tr>
         </table>
         <button id="btn_update" onclick="moveToDest('infoUpdate.jsp')">정보수정</button>
-        <div class="nav_section">팀원목록확인</div>
-        <div id="team_member">
-            <!-- 팀원 추가 -->
-        </div>
         <button class="logout_btn" onclick="moveToDest('../action/logoutAction.jsp')">로그아웃</button>
     </nav>
 <!-- 메인 -->
@@ -175,8 +173,6 @@ document.getElementById("month_checked" + (selectMonth-1)).style.display="block"
 
 makeCalenderName(ownerName,selectYear,selectMonth)
 makeCalender(selectMonth)
-var memberList=['김기주','지원']
-teamMember(memberList)
 
 //함수정의
 
@@ -187,15 +183,7 @@ function moveToDest(e){
 function makeCalenderName(ownerName,selectYear,selectMonth){
     ownerCalender.innerHTML = ownerName + "팀원의 " + selectYear + "년 " + selectMonth + "월 일정"
 }
-function teamMember(memberList){
-    for(var i=0;i<memberList.length;i++){
-        var member = document.createElement("a")
-        member.innerHTML=memberList[i]
-        member.classList.add("member")
-        member.href= "memberSchedule.jsp"
-        document.getElementById("team_member").appendChild(member)
-    }
-}
+
 //날짜 생성함수
 function makeCalender(selectMonth){
 
@@ -257,10 +245,7 @@ function afterYearEvent(){
     makeCalenderName(ownerName,selectYear,selectMonth)
 }
 
-
 //슬라이드바 토글이벤트
-
-
 function menuBarEvent(){
     var navStyleRight = window.getComputedStyle(nav).getPropertyValue("right")
 
@@ -274,7 +259,6 @@ function menuBarEvent(){
 }
 
 // 월버튼 이벤트
-
 for(var i=0;i<12;i++){
     (function(index){
         var thisMonthBtn = document.getElementById("month_btn"+i)

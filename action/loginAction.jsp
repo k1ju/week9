@@ -7,6 +7,7 @@
 
 String userID = request.getParameter("id_value");
 String userPw = request.getParameter("pw_value");
+String userPosition=null;
 ResultSet rs = null;
 PreparedStatement query = null;
 Connection connect = null;
@@ -39,7 +40,12 @@ try{
     if(rs.next()){
         String userIdx = rs.getString(1);
         session.setAttribute("userIdx",userIdx);
-        response.sendRedirect("../page/schedule.jsp");
+        userPosition = rs.getString("position");
+        if(userPosition.equals("팀장")){   // 자바에서 문자열은 큰따옴표만""
+            response.sendRedirect("../page/leaderSchedule.jsp");
+        }else{
+            response.sendRedirect("../page/schedule.jsp");
+        }
     }
 
 }catch(NullPointerException e){ // 널포인터에러 발생시
@@ -67,10 +73,11 @@ try{
 <body>
     
 <script>
+    console.log("<%=userID%>")
+    console.log("<%=userPw%>")
 
     alert("일치하는 회원정보 없음")
-    location.href="../page/index.jsp"
+    // location.href="../page/index.jsp"
 
 </script>
 </body>
-</html>

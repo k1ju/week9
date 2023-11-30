@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html" pageEncoding="utf-8" %>
 
-
+//비밀번호 일치경우 예외사항처리
 <%
     //String idChecked = request.getParameter("idChecked");
     //String inputID = request.getParameter("inputID");
