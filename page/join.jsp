@@ -23,7 +23,6 @@
 <body>
     <div id="container">
     <h1 id="title">Time Tree</h1>
-        <!-- <form class = "join_form" action="joinAction.jsp" onsubmit="return checkEvent()"> -->
         <form class = "join_form" action="../action/joinAction.jsp" onsubmit="return checkEvent()">
          
             <table>

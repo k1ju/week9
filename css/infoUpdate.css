@@ -3,26 +3,23 @@
 /* 네비게이션 */
 
 /* 메인 */
-#main_title{
-    width: 100%;
+.page_title{
     height: 80px;
-    margin-top: 60px;
-    margin-bottom: 100px;
     margin-left: auto;
     margin-right: auto;
     background-color: royalblue;
     color: white;
-    font-size: 1.5rem;
-    font-weight: 700;
+    font-size: 2rem;
     text-align: center;
     line-height: 80px;    /* 텍스트칸 높이 정렬*/
 }
 #info_box{
     width: 700px;
     height: 400px;
+    margin-top: 50px;
     margin-left: auto;
     margin-right: auto;
-    border: solid 3px blue;
+    border: solid 3px royalblue;
     border-radius: 30px;
     display: flex;
     flex-direction: column;
@@ -49,14 +46,15 @@ td{
     font-size: 1.2rem;
     font-weight: 900;
 }
-#updateBtn{
-    width: 250px;
+.updateBtn{
+    width: 35%;
     height: 45px;
     font-size: 1rem;
     font-weight: 700;
     color: white;
     background-color: royalblue;
     border-radius: 10px;
+    margin-top: 20px;
 }
 
 
