@@ -10,8 +10,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Calendar" %>
 
-<!-- 세션없이 접근하는 경우 처리 -->
-
+//unique로 검색하기
 <%
 request.setCharacterEncoding("utf-8");
 
@@ -53,7 +52,7 @@ try{
     sql += " JOIN user u ON user_idx = u.idx WHERE u.name = ? AND YEAR(date) = ? AND MONTH(date) = ? ";
 
     query = connect.prepareStatement(sql);
-    query.setString(1,userIdx);
+    query.setString(1,userName);
     query.setString(2,year);
     query.setString(3,month);
     rs = query.executeQuery();
@@ -61,7 +60,6 @@ try{
     while(rs.next()){
         ArrayList<String> schedule = new ArrayList<String>();
         String date = rs.getString(1);
-
         schedule.add("\"" + date + "\"");
         scheduleList.add(schedule);
     }
@@ -138,7 +136,8 @@ try{
 
 </body>
 <script>
-
+//전역 코드 모아놓기
+var scheduleList=<%=scheduleList%> 
 var date = new Date()
 var selectYear = <%=year%>
 var selectMonth = <%=month%>
@@ -151,6 +150,11 @@ var arrowRight = document.getElementById("arrow_right_btn")
 var ownerCalender = document.getElementById("owner_calender")
 var calender = document.getElementById("calender")
 var dayBtnList = document.getElementsByClassName("dayBtn")
+
+console.log(selectYear)
+console.log(selectMonth)
+console.log(<%=scheduleList%>)
+
 
 //현재날짜 표시  
 document.getElementById("current_date").innerHTML = date.getFullYear() + "-" +  (date.getMonth() + 1) + "-" + date.getDate();
@@ -223,18 +227,18 @@ function makeCalender(selectMonth){
     }
 
     calender.innerHTML=""
-    for(var i=0;i<5;i++){
+    for(let i=0;i<5;i++){
         var trTag = document.createElement("tr")
         calender.appendChild(trTag)
         trTag.classList.add("tr_tag")
-        for(var j=0; j<7;j++){
-            var tdTag = document.createElement("td")
-            var dayBtn = document.createElement("button")
+        for(let j=0; j<7;j++){
+            let tdTag = document.createElement("td")
+            let dayBtn = document.createElement("button")
             let scheduleCount = 0
-            var scheduleLine = document.createElement("div")
+            let scheduleLine = document.createElement("div")
             
-            for(var k=0; k<scheduleList.length; k++){
-                if(scheduleList[k][0].substring(8,10) == (i*7)+(j+1) ){
+            for(let k=0; k<scheduleList.length; k++){
+                if(scheduleList[k][0].substring(8,10) == (i*7)+(j+1)){
                     scheduleCount++
                 }
             }
@@ -255,16 +259,22 @@ function makeCalender(selectMonth){
             }else{
                 scheduleLine.style.display="none"
             }
-            dayBtn.addEventListener('click',getModal)
+            //반복문으로 만든 여러개의 개체에 동시에 이벤트부여하는 것은 addevent가 더 낫다
+            dayBtn.addEventListener('click',function(){
+                var dayNum = parseInt(j+1) + parseInt(i*7)
+                url= "modal.jsp?ownerName=" + ownerName + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
+                url+= "&selectDay=" + dayNum
+                window.open(url,"_blank","width=700,height=400") // 모달 새창으로 열기
+            })
         }
     }
 }
-// 선택날짜 일정확인
+// 모달열기
 function getModal(){
+    url= "scheduleShowAction.jsp?ownerName=" + ownerName + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
+    url+= "&selectDay=" + 
     window.open("modal.jsp","_blank","width=700,height=400")
 }
-
-//이벤트설정
 // 다음연도, 이전연도 버튼 이벤트
 function beforeYearEvent(){
     selectYear -= 1
@@ -276,8 +286,7 @@ function afterYearEvent(){
     url = "leaderSchedule.jsp?ownerName=" + ownerName + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
     window.open(url,"_self")
 }
-
-//슬라이드바 토글이벤트
+//슬라이드바 토글
 function menuBarEvent(){
     var navStyleRight = window.getComputedStyle(nav).getPropertyValue("right")
 

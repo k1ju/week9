@@ -9,11 +9,6 @@
 <%@ page import="java.sql.ResultSet" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Calendar" %>
-
-
-<!-- 세션없이 접근하는 경우 처리 -->
-<!-- 처음부터 일정의 개수만 가져오기 -->
-
 <%
 request.setCharacterEncoding("utf-8");
 
@@ -172,12 +167,8 @@ try{
 
 </body>
 <script>
-var scheduleList=<%=scheduleList%> //날짜, 일정,수행여부 순서
-// console.log("현재월의 스케쥴리스트는 "+scheduleList)
-// console.log("달력생성, 현재 월은" + selectMonth + "월")
 
-console.log(<%=scheduleList%>)
-
+var scheduleList=<%=scheduleList%> 
 var date = new Date();
 var selectYear = <%=year%>
 var selectMonth = <%=month%>
@@ -192,11 +183,7 @@ var ownerCalender = document.getElementById("owner_calender")
 var calender = document.getElementById("calender")
 var dayBtnList = document.getElementsByClassName("dayBtn")
 
-console.log(selectYear)
-console.log(selectMonth)
-console.log(selectDay)
-console.log(ownerName)
-
+console.log(<%=scheduleList%>)
 
 
 //현재날짜 표시  
@@ -285,13 +272,13 @@ function makeCalender(selectMonth){
         calender.appendChild(trTag)
         trTag.classList.add("tr_tag")
         for(var j=0; j<7;j++){
-            var tdTag = document.createElement("td")
-            var dayBtn = document.createElement("button")
+            let tdTag = document.createElement("td")
+            let dayBtn = document.createElement("button")
             let scheduleCount = 0
-            var scheduleLine = document.createElement("div")
+            let scheduleLine = document.createElement("div")
             
             for(var k=0; k<scheduleList.length; k++){
-                if(scheduleList[k][0].substring(8,10) == (i*7)+(j+1) ){
+                if(scheduleList[k][0].substring(8,10) == (i*7)+(j+1)){
                     scheduleCount++
                 }
             }
@@ -316,12 +303,10 @@ function makeCalender(selectMonth){
         }
     }
 }
-// 선택날짜 일정확인
+// 모달열기
 function getModal(){
     window.open("modal.jsp","_blank","width=700,height=400")
 }
-
-//이벤트설정
 // 다음연도, 이전연도 버튼 이벤트
 function beforeYearEvent(){
     selectYear -= 1
@@ -333,7 +318,7 @@ function afterYearEvent(){
     url = "leaderSchedule.jsp?ownerName=" + ownerName + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
     window.open(url,"_self")
 }
-//슬라이드바 토글이벤트
+//슬라이드바 토글
 function menuBarEvent(){
     var navStyleRight = window.getComputedStyle(nav).getPropertyValue("right")
     if(navStyleRight == "-300px"){

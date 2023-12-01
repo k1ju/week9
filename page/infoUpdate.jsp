@@ -12,14 +12,15 @@
 <%
 request.setCharacterEncoding("utf-8");
 
-String userIdx = null;
+String userIdx = (String)session.getAttribute("userIdx");
+String userName = (String)session.getAttribute("userName");
+String userPhonenumber = (String)session.getAttribute("userPhonenumber");
+String userPosition = (String)session.getAttribute("userPosition");
+String userTeam = (String)session.getAttribute("userTeam");
+
 ResultSet rs = null;
 PreparedStatement query = null;
 Connection connect = null;
-String userName = null;
-String userPhonenumber = null;
-String userPosition = null;
-String userTeam = null;
 
 ArrayList<ArrayList<String>> scheduleList = new ArrayList<ArrayList<String>>();
 
@@ -29,6 +30,7 @@ try{
     }else{
         throw new Exception();
     }
+    
     Class.forName("com.mysql.jdbc.Driver"); //db연결
     connect = DriverManager.getConnection("jdbc:mysql://localhost/week9","stageus","1234");
     String sql = "SELECT s.*,u.name,u.phonenumber,u.position,u.team FROM schedule s ";
@@ -177,13 +179,11 @@ function moveToDest(e){
 }
 //슬라이드바 토글이벤트
 function menuBarEvent(){
-    var navStyleRight = window.getComputedStyle(nav).getPropertyValue("right")
+    var navStyleRight = window.getComputedStyle(nav).getPropertyValue("right") //조회는 getComputedby
 
     if(navStyleRight == "-300px"){
-        console.log("네비게이션 펼치기")
         nav.style.right = "0"
     }else {
-        console.log("네비게이션 숨기기")
         nav.style.right="-300px"
     }
 }
@@ -205,10 +205,10 @@ function formEvent(){
             userPosition = userPositionList[i].value
         }
     }
-    // if(!userName?.trim() || !userPhonenumber?.trim() || !userTeam?.trim() || !userPosition?.trim() ){
-    //     alert("값을 입력해주세요")
-    //     return false
-    // }
+    if(!userName?.trim() || !userPhonenumber?.trim() || !userTeam?.trim() || !userPosition?.trim() ){
+        alert("값을 입력해주세요")
+        return false
+    }
 
 }
 

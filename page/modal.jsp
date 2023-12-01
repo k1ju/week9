@@ -1,4 +1,72 @@
 <%@ page language="java" contentType="text/html" pageEncoding="utf-8" %>
+<!-- 데이터베이스 탐색라이브러리 -->
+<%@ page import="java.sql.DriverManager" %>
+<!-- db연결 라이브러리 -->
+<%@ page import="java.sql.Connection" %>
+<!-- sql전송 라이브러리 -->
+<%@ page import="java.sql.PreparedStatement" %>
+<!-- 데이터받아오기 라이브러리 -->
+<%@ page import="java.sql.ResultSet" %>
+<%@ page import="java.util.ArrayList" %>
+//모달 css 수정하기
+<%
+String userIdx = (String)session.getAttribute("userIdx");
+String userName = (String)session.getAttribute("userName");
+
+ResultSet rs = null;
+PreparedStatement query = null;
+Connection connect = null;
+
+String year = request.getParameter("selectYear");
+String month = request.getParameter("selectMonth");
+String day = request.getParameter("selectDay");
+ArrayList<ArrayList<String>> scheduleList = new ArrayList<ArrayList<String>>();
+
+
+try{
+    if(session.getAttribute("userIdx") != null){
+        userIdx = (String)session.getAttribute("userIdx");
+    }else{
+        throw new Exception();
+    }
+    Class.forName("com.mysql.jdbc.Driver"); //db연결
+    connect = DriverManager.getConnection("jdbc:mysql://localhost/week9","stageus","1234");
+    String sql = "SELECT date,content,execution_status FROM schedule s ";
+    sql += " JOIN user u ON user_idx = u.idx WHERE u.name = ? AND YEAR(date) = ? AND MONTH(date) = ? AND DAY(date) = ? ";
+    sql += " ORDER BY date";
+    query = connect.prepareStatement(sql);
+    query.setString(1,userName);
+    query.setString(2,year);
+    query.setString(3,month);
+    query.setString(4,day);
+    rs = query.executeQuery();
+
+    while(rs.next()){
+        ArrayList<String> schedule = new ArrayList<String>();
+        String date = rs.getString(1).substring(11,16);
+        String content = rs.getString(2); 
+        String executionStatus = rs.getString(3);
+        schedule.add("\"" + date + "\"");
+        schedule.add("\"" + content + "\"");
+        schedule.add("\"" + executionStatus + "\"");
+        scheduleList.add(schedule);
+    }
+
+}catch(Exception e){
+    //response.sendRedirect("index.jsp");
+}finally{
+    if (rs != null) {
+        rs.close();
+    }
+    if (query != null) {
+        query.close();
+    }
+    if (connect != null) {
+        connect.close();
+    }
+}
+
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,7 +79,6 @@
 </head>
 <body>
     
-
 <!-- 모달 -->
 <!-- 제목: 선택날짜
 내용: 선택날짜 일정 -->
@@ -31,25 +98,25 @@
 
 </body>
 <script>
-//모달 변수
+
 // [날짜,일정,수행여부]
-var dummyList = [['2023-11-27 12:34:56','등산가기','false'],['2023-11-27 12:34:56','물마시기','false']]
+var scheduleList = <%=scheduleList%>
+console.log(scheduleList)
 
-    var modal = document.getElementById("modal")
-    var modalContent = document.getElementById("modal_content")
-    var scheduleStatusList = document.getElementsByClassName("schedule_status")
-    var schedulePlanList = document.getElementsByClassName("schedule_plan")
-    var modalDeleteBtnList = document.getElementsByClassName("modal__btn_delete")
-    var modalUpdateBtnList = document.getElementsByClassName("modal__btn_update")
-    var modalConfirmBtnList = document.getElementsByClassName("modal__btn_confirm")
-    var schedulePlanUpdate = document.getElementById("schedule_plan_update")
-    var scheduleTimeUpdate = document.getElementById("schedule_time_update")
+var modal = document.getElementById("modal")
+var modalContent = document.getElementById("modal_content")
+var scheduleStatusList = document.getElementsByClassName("schedule_status")
+var schedulePlanList = document.getElementsByClassName("schedule_plan")
+var modalDeleteBtnList = document.getElementsByClassName("modal__btn_delete")
+var modalUpdateBtnList = document.getElementsByClassName("modal__btn_update")
+var modalConfirmBtnList = document.getElementsByClassName("modal__btn_confirm")
+var schedulePlanUpdate = document.getElementById("schedule_plan_update")
+var scheduleTimeUpdate = document.getElementById("schedule_time_update")
 
-    // 리스트준비해서 받아오기
+// 리스트준비해서 받아오기
 //모달내 일정생성하기
 
-makeArticle(dummyList)
-
+makeArticle(scheduleList)
 
 function makeArticle(list){
 
