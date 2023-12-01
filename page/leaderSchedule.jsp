@@ -27,6 +27,13 @@ String ownerName = request.getParameter("ownerName");
 if(ownerName==null){
     ownerName = userName;
 }
+
+ResultSet rs = null;
+PreparedStatement query = null;
+ResultSet rs2 = null;
+PreparedStatement query2 = null;
+Connection connect = null;
+
 Calendar calendar = Calendar.getInstance();
 String year = request.getParameter("selectYear");
 if(year==null){
@@ -41,14 +48,6 @@ if(day==null){
     day = Integer.toString(calendar.get(Calendar.DAY_OF_MONTH));
 }
 
-ResultSet rs = null;
-PreparedStatement query = null;
-ResultSet rs2 = null;
-PreparedStatement query2 = null;
-ResultSet rs3 = null;
-PreparedStatement query3 = null;
-Connection connect = null;
-
 ArrayList<ArrayList<String>> scheduleList = new ArrayList<ArrayList<String>>();
 ArrayList<String> memberList = new ArrayList<String>();
 
@@ -62,7 +61,7 @@ try{
     Class.forName("com.mysql.jdbc.Driver"); //db연결
     connect = DriverManager.getConnection("jdbc:mysql://localhost/week9","stageus","1234");
     // 팀원명단 가져오기sql
-    String sql =  "SELECT * FROM user WHERE team = (SELECT team FROM user WHERE idx = ?)";
+    String sql = "SELECT * FROM user WHERE team = (SELECT team FROM user WHERE idx = ?)";
     query = connect.prepareStatement(sql);
     query.setString(1,userIdx);
     rs = query.executeQuery();
@@ -73,32 +72,36 @@ try{
     }
 
     //스케쥴 개수가져오기sql
-    String sql3 = "SELECT date FROM schedule s ";
-    sql3 += " JOIN user u ON user_idx = u.idx WHERE u.name = ? AND YEAR(date) = ? AND MONTH(date) = ? ";
-    query3 = connect.prepareStatement(sql3);
+    String sql2 = "SELECT date FROM schedule s ";
+    sql2 += " JOIN user u ON user_idx = u.idx WHERE u.name = ? AND YEAR(date) = ? AND MONTH(date) = ? ";
     
-    query3.setString(1,ownerName);
-    query3.setString(2,year);
-    query3.setString(3,month);
+    query2 = connect.prepareStatement(sql2);
+    query2.setString(1,ownerName);
+    query2.setString(2,year);
+    query2.setString(3,month);
+    rs2 = query2.executeQuery();
     
-    rs3 = query3.executeQuery();
-    
-    while(rs3.next()){
+    while(rs2.next()){
         ArrayList<String> schedule = new ArrayList<String>();  
-        String date = rs3.getString(1);
-
+        String date = rs2.getString(1);
         schedule.add("\"" + date + "\"");
         scheduleList.add(schedule);
     }
 
 }catch(Exception e){
-    //response.sendRedirect("index.jsp");
+    response.sendRedirect("index.jsp");
 }finally{
     if (rs != null) {
         rs.close();
     }
     if (query != null) {
         query.close();
+    }
+    if (rs2 != null) {
+        rs2.close();
+    }
+    if (query2 != null) {
+        query2.close();
     }
     if (connect != null) {
         connect.close();
@@ -176,9 +179,9 @@ var scheduleList=<%=scheduleList%> //날짜, 일정,수행여부 순서
 console.log(<%=scheduleList%>)
 
 var date = new Date();
-var selectYear = <%=year%>;
-var selectMonth = <%=month%>;
-var selectDay = <%=day%>;
+var selectYear = <%=year%>
+var selectMonth = <%=month%>
+var selectDay = <%=day%>
 var ownerName = "<%=ownerName%>"
 var memberList = <%=memberList%>
 var nav = document.getElementById("navigation")
@@ -245,6 +248,7 @@ for(var i=0;i<12;i++){
 document.getElementById("month_checked" + (selectMonth)).style.display="block"
 
 //함수정의
+
 function moveToDest(e){
     location.href=e
 }
@@ -277,7 +281,6 @@ function makeCalender(selectMonth){
 
     calender.innerHTML=""
     for(var i=0;i<5;i++){
-        
         var trTag = document.createElement("tr")
         calender.appendChild(trTag)
         trTag.classList.add("tr_tag")
@@ -285,14 +288,13 @@ function makeCalender(selectMonth){
             var tdTag = document.createElement("td")
             var dayBtn = document.createElement("button")
             let scheduleCount = 0
+            var scheduleLine = document.createElement("div")
             
             for(var k=0; k<scheduleList.length; k++){
                 if(scheduleList[k][0].substring(8,10) == (i*7)+(j+1) ){
                     scheduleCount++
                 }
             }
-
-            var scheduleLine = document.createElement("div")
 
             tdTag.className="tdTag"
             dayBtn.className="dayBtn"
@@ -302,7 +304,6 @@ function makeCalender(selectMonth){
                 break
             }
             dayBtn.innerHTML = (j+1)+(i*7)
-            
             trTag.appendChild(tdTag)
             dayBtn.appendChild(scheduleLine)
 
@@ -317,7 +318,6 @@ function makeCalender(selectMonth){
 }
 // 선택날짜 일정확인
 function getModal(){
-
     window.open("modal.jsp","_blank","width=700,height=400")
 }
 
@@ -327,14 +327,11 @@ function beforeYearEvent(){
     selectYear -= 1
     url = "leaderSchedule.jsp?ownerName=" + ownerName + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
     window.open(url,"_self")
-    // makeCalenderName(ownerName,selectYear,selectMonth)
 }
-
 function afterYearEvent(){
     selectYear += 1
     url = "leaderSchedule.jsp?ownerName=" + ownerName + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
     window.open(url,"_self")
-    // makeCalenderName(ownerName,selectYear,selectMonth)
 }
 //슬라이드바 토글이벤트
 function menuBarEvent(){
