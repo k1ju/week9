@@ -8,67 +8,91 @@
 <!-- 데이터받아오기 라이브러리 -->
 <%@ page import="java.sql.ResultSet" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.Calendar" %>
+
 
 <!-- 세션없이 접근하는 경우 처리 -->
+<!-- 처음부터 일정의 개수만 가져오기 -->
 
 <%
 request.setCharacterEncoding("utf-8");
 
-String userIdx = null;
+String userIdx = (String)session.getAttribute("userIdx");
+String userName = (String)session.getAttribute("userName");
+String userPhonenumber = (String)session.getAttribute("userPhonenumber");
+String userPosition = (String)session.getAttribute("userPosition");
+String userTeam = (String)session.getAttribute("userTeam");
+String member = null;
+String ownerName = request.getParameter("ownerName");
+if(ownerName==null){
+    ownerName = userName;
+}
+Calendar calendar = Calendar.getInstance();
+String year = request.getParameter("selectYear");
+if(year==null){
+    year = Integer.toString(calendar.get(Calendar.YEAR));
+}
+String month = request.getParameter("selectMonth");
+if(month==null){
+    month = Integer.toString(calendar.get(Calendar.MONTH) + 1);
+}
+String day = request.getParameter("selectDay");
+if(day==null){
+    day = Integer.toString(calendar.get(Calendar.DAY_OF_MONTH));
+}
+
 ResultSet rs = null;
 PreparedStatement query = null;
 ResultSet rs2 = null;
 PreparedStatement query2 = null;
+ResultSet rs3 = null;
+PreparedStatement query3 = null;
 Connection connect = null;
-String userName = null;
-String userPhonenumber = null;
-String userPosition = null;
-String userTeam = null;
 
 ArrayList<ArrayList<String>> scheduleList = new ArrayList<ArrayList<String>>();
 ArrayList<String> memberList = new ArrayList<String>();
+
 try{
     if(session.getAttribute("userIdx") != null){
         userIdx = (String)session.getAttribute("userIdx");
     }else{
         throw new Exception();
     }
+
     Class.forName("com.mysql.jdbc.Driver"); //db연결
     connect = DriverManager.getConnection("jdbc:mysql://localhost/week9","stageus","1234");
-    String sql =  "SELECT * FROM user WHERE team = (SELECT team FROM user WHERE idx = ?)"; // 팀원명단 가져오기
+    // 팀원명단 가져오기sql
+    String sql =  "SELECT * FROM user WHERE team = (SELECT team FROM user WHERE idx = ?)";
     query = connect.prepareStatement(sql);
     query.setString(1,userIdx);
     rs = query.executeQuery();
     
     while(rs.next()){
-        userName = rs.getString("name");
-        memberList.add("\"" + userName + "\"");
+        member = rs.getString("name");
+        memberList.add("\"" + member + "\"");
     }
 
-    String sql2 = "SELECT s.*,u.name,u.phonenumber,u.position,u.team FROM schedule s ";  //  내정보와 내일정 가져오기
-    sql2 += " LEFT JOIN user u ON s.user_idx = u.idx WHERE s.user_idx = ? ";
-    query2 = connect.prepareStatement(sql2);
-    query2.setString(1,userIdx);
-    rs2 = query2.executeQuery();
+    //스케쥴 개수가져오기sql
+    String sql3 = "SELECT date FROM schedule s ";
+    sql3 += " JOIN user u ON user_idx = u.idx WHERE u.name = ? AND YEAR(date) = ? AND MONTH(date) = ? ";
+    query3 = connect.prepareStatement(sql3);
     
-    while(rs2.next()){
-        ArrayList<String> schedule = new ArrayList<String>();
-        String date = rs2.getString("date");
-        String content = rs2.getString("content");
-        String executionStatus = rs2.getString("execution_status");
-        userName = rs2.getString("name");
-        userPhonenumber = rs2.getString("phonenumber");
-        userPosition = rs2.getString("position");
-        userTeam = rs2.getString("team");
+    query3.setString(1,ownerName);
+    query3.setString(2,year);
+    query3.setString(3,month);
+    
+    rs3 = query3.executeQuery();
+    
+    while(rs3.next()){
+        ArrayList<String> schedule = new ArrayList<String>();  
+        String date = rs3.getString(1);
 
         schedule.add("\"" + date + "\"");
-        schedule.add("\"" + content + "\"");
-        schedule.add("\"" + executionStatus + "\"");
         scheduleList.add(schedule);
     }
 
 }catch(Exception e){
-    response.sendRedirect("index.jsp");
+    //response.sendRedirect("index.jsp");
 }finally{
     if (rs != null) {
         rs.close();
@@ -110,7 +134,7 @@ try{
             </tr>
             <tr class="row">
                 <td class="c1">연락처:</td>
-                <td class="2c"><%=userPhonenumber.substring(0,3)%>-<%=userPhonenumber.substring(3,7)%>-<%=userPhonenumber.substring(7,11) %></td>
+                <td class="2c"><%=userPhonenumber%></td>
             </tr>
             <tr class="row">
                 <td class="c1">직급:</td>
@@ -136,60 +160,89 @@ try{
             <Img class="icon_arrow" onclick="afterYearEvent()" src="../image/arrow_right_icon.png">
         </div>
         <div id="month_btn_box">
+            <!-- 월버튼추가 -->
         </div>
         <table id="calender">
+            <!-- 달력추가 -->
         </table>
     </main>
 
 </body>
 <script>
-var memberList=<%=memberList%>
-console.log(memberList)
+var scheduleList=<%=scheduleList%> //날짜, 일정,수행여부 순서
+// console.log("현재월의 스케쥴리스트는 "+scheduleList)
+// console.log("달력생성, 현재 월은" + selectMonth + "월")
 
-date = new Date();
-var selectYear = date.getFullYear();
-var selectMonth = date.getMonth() + 1;
-var selectDay = date.getDate();
-var maxDay = 0
+console.log(<%=scheduleList%>)
+
+var date = new Date();
+var selectYear = <%=year%>;
+var selectMonth = <%=month%>;
+var selectDay = <%=day%>;
+var ownerName = "<%=ownerName%>"
+var memberList = <%=memberList%>
 var nav = document.getElementById("navigation")
 var menuBtn = document.getElementById("icon_menu")
 var arrowLeft = document.getElementById("arrow_left_btn")
 var arrowRight = document.getElementById("arrow_right_btn")
 var ownerCalender = document.getElementById("owner_calender")
-var ownerName = "기주"
 var calender = document.getElementById("calender")
 var dayBtnList = document.getElementsByClassName("dayBtn")
 
+console.log(selectYear)
+console.log(selectMonth)
+console.log(selectDay)
+console.log(ownerName)
+
+
+
 //현재날짜 표시  
-document.getElementById("current_date").innerHTML = selectYear + "-" +  selectMonth + "-" + selectDay;
+document.getElementById("current_date").innerHTML = date.getFullYear() + "-" +  (date.getMonth()+1) + "-" + date.getDate();
+
+//함수선언
+makeCalenderName(ownerName,selectYear,selectMonth)
+makeCalender(selectMonth)
+teamMember(memberList)
 
 // 월 버튼 생성
 for(var i=0;i<12;i++){
-    var monthBtn = document.createElement("button")
-    var monthName = document.createElement("div")
-    var monthChecked = document.createElement("div")
+    let monthBtn = document.createElement("button")
+    let monthName = document.createElement("div")
+    let monthChecked = document.createElement("div")
 
     monthBtn.classList.add("month_btn")
-    monthBtn.id ='month_btn' + i
+    monthBtn.id ='month_btn' + (i+1)
 
     monthName.classList.add("name_month")
     monthName.innerHTML = (i+1) + "월"
 
     monthChecked.innerHTML = "V"
     monthChecked.style.display = "none"
-    monthChecked.id='month_checked' + i
+    monthChecked.id='month_checked' + (i+1)
 
     monthBtn.appendChild(monthName)
     monthBtn.appendChild(monthChecked)
     document.getElementById("month_btn_box").appendChild(monthBtn)
+
+    monthBtn.addEventListener('click',function(){
+        selectMonth= parseInt(monthBtn.id.replace(/[^0-9]/g,""))
+        
+        for(var i=0; i<12; i++){
+            document.getElementById("month_checked"+(i+1)).style.display="none"
+        }
+        monthChecked.style.display="block"
+
+        ownerCalender.innerHTML = ownerName + "팀원의 " + selectYear + "년" + selectMonth + "월 일정"
+
+        makeCalenderName(ownerName,selectYear,selectMonth)
+        makeCalender(selectMonth)
+
+        let url = "leaderSchedule.jsp?ownerName=" + ownerName + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
+        window.open(url,"_self")
+    })
 }
-document.getElementById("month_checked" + (selectMonth-1)).style.display="block"
 
-//함수선언
-
-makeCalenderName(ownerName,selectYear,selectMonth)
-makeCalender(selectMonth)
-teamMember(memberList)
+document.getElementById("month_checked" + (selectMonth)).style.display="block"
 
 //함수정의
 function moveToDest(e){
@@ -209,7 +262,10 @@ function teamMember(memberList){
 }
 //날짜 생성함수
 function makeCalender(selectMonth){
-
+    scheduleList=<%=scheduleList%> //날짜, 일정,수행여부 순서
+    console.log("현재월의 스케쥴리스트는 "+scheduleList)
+    console.log("달력생성, 현재 월은" + selectMonth + "월")
+    var maxDay = 0
     if (selectMonth ==2){
         maxDay=28
     } else if(selectMonth== 1 || selectMonth== 3 || selectMonth== 5 || selectMonth== 5 ||
@@ -221,12 +277,21 @@ function makeCalender(selectMonth){
 
     calender.innerHTML=""
     for(var i=0;i<5;i++){
+        
         var trTag = document.createElement("tr")
         calender.appendChild(trTag)
+        trTag.classList.add("tr_tag")
         for(var j=0; j<7;j++){
             var tdTag = document.createElement("td")
             var dayBtn = document.createElement("button")
-            var scheduleCount = 1
+            let scheduleCount = 0
+            
+            for(var k=0; k<scheduleList.length; k++){
+                if(scheduleList[k][0].substring(8,10) == (i*7)+(j+1) ){
+                    scheduleCount++
+                }
+            }
+
             var scheduleLine = document.createElement("div")
 
             tdTag.className="tdTag"
@@ -260,54 +325,26 @@ function getModal(){
 // 다음연도, 이전연도 버튼 이벤트
 function beforeYearEvent(){
     selectYear -= 1
-    makeCalenderName(ownerName,selectYear,selectMonth)
+    url = "leaderSchedule.jsp?ownerName=" + ownerName + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
+    window.open(url,"_self")
+    // makeCalenderName(ownerName,selectYear,selectMonth)
 }
 
 function afterYearEvent(){
     selectYear += 1
-    makeCalenderName(ownerName,selectYear,selectMonth)
+    url = "leaderSchedule.jsp?ownerName=" + ownerName + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
+    window.open(url,"_self")
+    // makeCalenderName(ownerName,selectYear,selectMonth)
 }
-
 //슬라이드바 토글이벤트
 function menuBarEvent(){
     var navStyleRight = window.getComputedStyle(nav).getPropertyValue("right")
-
     if(navStyleRight == "-300px"){
-        console.log("네비게이션 펼치기")
         nav.style.right = "0"
     }else {
-        console.log("네비게이션 숨기기")
         nav.style.right="-300px"
     }
 }
-
-// 월버튼 이벤트
-for(var i=0;i<12;i++){
-    (function(index){
-        var thisMonthBtn = document.getElementById("month_btn"+i)
-        var thisChecked = document.getElementById("month_checked"+i)
-        thisMonthBtn.addEventListener('click',function(){
-            for(var j=0;j<12;j++){
-                document.getElementById("month_checked"+j).style.display="none"
-            }
-            thisChecked.style.display="block"
-            selectMonth= parseInt(thisMonthBtn.id.replace(/[^0-9]/g,"")) + 1
-            ownerCalender.innerHTML = ownerName + "팀원의 " + selectYear + "년" + selectMonth + "월 일정"
-
-            makeCalenderName(ownerName,selectYear,selectMonth)
-            makeCalender(selectMonth)
-        }
-    )}(i)
-)}
-
-
-
-
-
-
-
-
-
 
 
 </script>

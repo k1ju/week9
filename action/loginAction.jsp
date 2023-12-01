@@ -7,7 +7,6 @@
 
 String userID = request.getParameter("id_value");
 String userPw = request.getParameter("pw_value");
-String userPosition=null;
 ResultSet rs = null;
 PreparedStatement query = null;
 Connection connect = null;
@@ -39,9 +38,19 @@ try{
 
     if(rs.next()){
         String userIdx = rs.getString(1);
+        String userName = rs.getString(4);
+        String userPhonenumber = rs.getString(5);
+        String userPosition = rs.getString(6);
+        String userTeam = rs.getString(7);
+
         session.setAttribute("userIdx",userIdx);
+        session.setAttribute("userName",userName);
+        session.setAttribute("userPhonenumber",userPhonenumber);
+        session.setAttribute("userPosition",userPosition);
+        session.setAttribute("userTeam",userTeam);
+
         userPosition = rs.getString("position");
-        if(userPosition.equals("팀장")){   // 자바에서 문자열은 큰따옴표만""
+        if(userPosition.equals("팀장")){   // 자바에서 문자열은 큰따옴표만"", 문자열 비교는 equals()
             response.sendRedirect("../page/leaderSchedule.jsp");
         }else{
             response.sendRedirect("../page/schedule.jsp");

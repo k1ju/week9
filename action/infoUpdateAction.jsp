@@ -72,7 +72,7 @@ try{
     <script>
 
         alert("수정완료")
-        
+        location.href="../page/infoUpdate.jsp"
     </script>
 </body>
 </html>
