@@ -16,16 +16,15 @@ String userName = request.getParameter("name_value");
 String userPhonenumber = request.getParameter("phonenumber_value");
 String userPosition = request.getParameter("position_value");
 String userTeam = request.getParameter("team_value");
-
 try{
-    if(session.getAttribute("userIdx") != null){
-        userIdx = (String)session.getAttribute("userIdx");
-    }else{
+//if문 널이면 이동,else노필요
+    if(session.getAttribute("userIdx") == null){
         throw new Exception();
     }
+    userIdx = (String)session.getAttribute("userIdx");
 
     if( userName.trim().isEmpty() || userPhonenumber.trim().isEmpty() || userTeam.isEmpty() || userPosition.isEmpty()){
-        throw new NullPointerException();
+        throw new Exception();
     }
     userName = userName.trim();
     userPhonenumber = userPhonenumber.replaceAll("[^0-9]","");
@@ -46,9 +45,6 @@ try{
     query.setString(4,userPosition);
     query.setString(5,userIdx);
     query.executeUpdate();
-    
-}catch(NullPointerException e){
-    response.sendRedirect("../page/infoUpdate.jsp");
 }catch(Exception e){ // 세션없으면 로그인페이지로 이동
     response.sendRedirect("../page/index.jsp");
 }finally{

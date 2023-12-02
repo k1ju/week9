@@ -26,7 +26,7 @@ function idFindEvent(){
     console.log(nameValue)
     console.log(phonenumberValue)
 
-    if(nameValue==="" || phonenumberValue===""){
+    if(!!nameValue || !!phonenumberValue){
         alert("값을 입력하세요")
         return false
     } else if(nameValue.length>10){

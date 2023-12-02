@@ -25,13 +25,13 @@
 </body>
 
 <script>
-    function moveToDest(e){
+    function moveToDest(e){ //함수"이벤트"쓰기, 매개변수이름변경
         console.log("클릭")
         location.href=e
     }
 
     function checkEvent(){
-        id = document.getElementById("input_id").value
+        id = document.getElementById("input_id").value//정규표현식 예외처리
         pw = document.getElementById("input_pw").value
 
         console.log("로그인 검사시작")

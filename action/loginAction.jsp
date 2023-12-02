@@ -10,10 +10,11 @@ String userPw = request.getParameter("pw_value");
 ResultSet rs = null;
 PreparedStatement query = null;
 Connection connect = null;
-
+//정규표현식 사용
 try{
+    //if문수정
     if(userID.equals("") || userPw.equals("")){
-        throw new NullPointerException();
+        throw new Exception();
     }else{
         userID = userID.trim();
         userPw = userPw.trim();
@@ -37,6 +38,7 @@ try{
     rs = query.executeQuery();
 
     if(rs.next()){
+        //필요한건 세션저장 ㄱㄱ
         String userIdx = rs.getString(1);
         String userName = rs.getString(4);
         String userPhonenumber = rs.getString(5);
@@ -56,9 +58,6 @@ try{
             response.sendRedirect("../page/schedule.jsp");
         }
     }
-
-}catch(NullPointerException e){ // 널포인터에러 발생시
-    response.sendRedirect("../page/index.jsp");
 }catch(Exception e){
     response.sendRedirect("../page/index.jsp");
 }finally{

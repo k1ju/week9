@@ -41,16 +41,18 @@ if(day==null){
 ArrayList<ArrayList<String>> scheduleList = new ArrayList<ArrayList<String>>();
 
 try{
-    if(session.getAttribute("userIdx") != null){
-        userIdx = (String)session.getAttribute("userIdx");
-    }else{
+    //if문 userIdx사용, if문으로 캐치보내면 else노필요
+    if(session.getAttribute("userIdx") == null){ 
         throw new Exception();
     }
+    userIdx = (String)session.getAttribute("userIdx");
+
     Class.forName("com.mysql.jdbc.Driver"); //db연결
     connect = DriverManager.getConnection("jdbc:mysql://localhost/week9","stageus","1234");
     String sql = "SELECT date FROM schedule s ";
     sql += " JOIN user u ON user_idx = u.idx WHERE u.name = ? AND YEAR(date) = ? AND MONTH(date) = ? ";
-
+//조인필요없음.
+//이름말고 idx로검색
     query = connect.prepareStatement(sql);
     query.setString(1,userName);
     query.setString(2,year);
@@ -269,7 +271,7 @@ function makeCalender(selectMonth){
         }
     }
 }
-// 모달열기
+// 모달열기, 함수명에 이벤트쓰기
 function getModal(){
     url= "scheduleShowAction.jsp?ownerName=" + ownerName + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
     url+= "&selectDay=" + 
@@ -296,7 +298,7 @@ function menuBarEvent(){
         nav.style.right="-300px"
     }
 }
-
+//엘리먼트생성 js로빼기
 
 </script>
 

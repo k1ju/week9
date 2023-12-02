@@ -14,11 +14,11 @@ Connection connect = null;
 
 try{
     if(userName.equals("") || userPhonenumber.equals("")){
-        throw new NullPointerException();
-    }else{
-        userName = userName.trim();
-        userPhonenumber = userPhonenumber.replaceAll("[^0-9]","");
+        throw new Exception();
     }
+    userName = userName.trim();
+    userPhonenumber = userPhonenumber.replaceAll("[^0-9]","");
+    
     if(userName.length() > 10){
         throw new Exception();
     }else if(userPhonenumber.length() > 13 || userPhonenumber.length() < 10){
@@ -42,8 +42,6 @@ try{
     }
 
 
-}catch(NullPointerException e){ // 널포인터에러 발생시
-    response.sendRedirect("../page/idFind.jsp");
     
 }catch(Exception e){
     response.sendRedirect("../page/idFind.jsp");

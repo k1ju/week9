@@ -126,7 +126,7 @@ function checkEvent(){
             break;
         }
     }
-
+//각항목정규표현식
     if(!id || !pw || !pw_check || !name || !phonenumber || !team || !position){ // 하나라도 널값이라면
        alert("필수값 입력해주세요")
        return false

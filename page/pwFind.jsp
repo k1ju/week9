@@ -26,16 +26,16 @@ function pwFindEvent(){
     var nameValue = document.getElementById("input_name").value.trim()  
     var phonenumberValue = document.getElementById("input_phonenumber").value.trim().replace(/[^0-9]/g,"")
     
-    // if(idValue=='' || nameValue==='' || phonenumberValue===''){
-    //     alert("값을 입력하세요")
-    //     return false
-    // }else if(nameValue.length>10){
-    //     alert("이름 최대 10글자 제한")
-    //     return false
-    // }else if(phonenumberValue.length>13 || phonenumberValue.length <10){
-    //     alert("연락처 글자 제한 10~13글자")
-    //     return false
-    // }
+    if(!!idValue || !!nameValue || !!phonenumberValue ){
+        alert("값을 입력하세요")
+        return false
+    }else if(nameValue.length>10){
+        alert("이름 최대 10글자 제한")
+        return false
+    }else if(phonenumberValue.length>13 || phonenumberValue.length <10){
+        alert("연락처 글자 제한 10~13글자")
+        return false
+    }
 }
 
 </script>

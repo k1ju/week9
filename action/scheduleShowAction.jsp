@@ -51,11 +51,10 @@ ArrayList<ArrayList<String>> scheduleList = new ArrayList<ArrayList<String>>();
 ArrayList<String> memberList = new ArrayList<String>();
 
 try{
-    if(session.getAttribute("userIdx") != null){
-        userIdx = (String)session.getAttribute("userIdx");
-    }else{
+    if(session.getAttribute("userIdx") == null){
         throw new Exception();
     }
+    userIdx = (String)session.getAttribute("userIdx");
 
     Class.forName("com.mysql.jdbc.Driver"); //db연결
     connect = DriverManager.getConnection("jdbc:mysql://localhost/week9","stageus","1234");

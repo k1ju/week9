@@ -10,8 +10,10 @@ String userPhonenumber = request.getParameter("phonenumber_value");
 String userPw = null;
 
 try{
+
+    //if문수정
     if(userID.equals("") || userName.equals("") || userPhonenumber.equals("")){
-        throw new NullPointerException();
+        throw new Exception();
     }else{
         userID = userID.trim();
         userName = userName.trim();
@@ -47,12 +49,6 @@ try{
     query.close();
     connect.close();
 
-}catch(NullPointerException e){ // 널포인터에러 발생시
-    response.sendRedirect("../page/pwFind.jsp");
-
-    rs.close();
-    query.close();
-    connect.close();
 }catch(Exception e){
     response.sendRedirect("../page/pwFind.jsp");
 

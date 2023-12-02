@@ -11,7 +11,7 @@
     String userTeam = request.getParameter("team_value");
     String userPosition = request.getParameter("position_value");
     int errorCode = 1;
-
+//캐치문으로 해결. 매개변수전달로 얼러트로 가능
     if(userID.isEmpty() || userPw.isEmpty() || userPwCheck.isEmpty() || userName.isEmpty() || userPhonenumber.isEmpty() || userTeam.isEmpty() || userPosition.isEmpty()){
         errorCode = 2;
     }else if(userID.trim().length() > 20){
