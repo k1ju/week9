@@ -3,32 +3,36 @@
 <%@ page import="java.sql.Connection" %>
 <%@ page import="java.sql.PreparedStatement" %>
 <%@ page import="java.sql.ResultSet" %>
-<%
+<%@ page import = "java.util.regex.Pattern"%>
 
-String userName = request.getParameter("name_value");
-String userPhonenumber = request.getParameter("phonenumber_value");
+<%
+String userName = null;
+String userPhonenumber = null;
 String userID = null;
+
+String userNameRegex = null;
+String userPhonenumberRegex = null;
 ResultSet rs = null;
 PreparedStatement query = null;
 Connection connect = null;
 
 try{
-    if(userName.equals("") || userPhonenumber.equals("")){
+    userNameRegex = "^[가-힣]{2,4}$";
+    userName = request.getParameter("name_value");
+
+    userPhonenumberRegex = "^[0-9]{10,11}$";
+    userPhonenumber = request.getParameter("phonenumber_value").replaceAll("[^0-9]","");
+
+    if(!Pattern.matches(userNameRegex,userName)){
         throw new Exception();
-    }
-    userName = userName.trim();
-    userPhonenumber = userPhonenumber.replaceAll("[^0-9]","");
-    
-    if(userName.length() > 10){
-        throw new Exception();
-    }else if(userPhonenumber.length() > 13 || userPhonenumber.length() < 10){
+    }else if(!Pattern.matches(userPhonenumberRegex,userPhonenumber)){
         throw new Exception();
     }
 
     String dbURL = "jdbc:mysql://localhost/week9";
     String dbID = "stageus";
     String dbPassword = "1234";
-    String sql = "SELECT id FROM user WHERE name = ? AND phonenumber = ? ";
+    String sql = "SELECT id FROM account WHERE name = ? AND phonenumber = ? ";
 
     Class.forName("com.mysql.jdbc.Driver"); //db연결
     connect = DriverManager.getConnection(dbURL,dbID,dbPassword);
@@ -41,11 +45,9 @@ try{
         userID = rs.getString(1);
     }
 
-
     
 }catch(Exception e){
     response.sendRedirect("../page/idFind.jsp");
-
 }finally{
     if (rs != null) {
         rs.close();
@@ -68,14 +70,13 @@ try{
     
     <script>
 
-        var userID = "<%=userID%>"
-
-        if("<%=userID%>" != ""){
-            alert("회원님의 아이디는"+ userID)
-            location.href="../page/idFind.jsp"
-        }else{
+        if("<%=userID%>" == "null"){
             alert("일치하는 회원정보없음")
             location.href="../page/idFind.jsp"
+
+        }else{
+            alert("회원님의 아이디는" + "<%=userID%>")
+            location.href="../page/index.jsp"
         }
     </script>
 </body>

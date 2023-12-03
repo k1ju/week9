@@ -37,7 +37,7 @@ try{
 
     Class.forName("com.mysql.jdbc.Driver"); //db연결
     connect = DriverManager.getConnection("jdbc:mysql://localhost/week9","stageus","1234");
-    String sql = "UPDATE user SET name=?, phonenumber=?, team=?, position=? WHERE idx = ? ";
+    String sql = "UPDATE account SET name=?, phonenumber=?, team=?, position=? WHERE idx = ? ";
     query = connect.prepareStatement(sql);
     query.setString(1,userName);
     query.setString(2,userPhonenumber);

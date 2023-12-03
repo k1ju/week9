@@ -3,32 +3,41 @@
 <%@ page import="java.sql.Connection" %>
 <%@ page import="java.sql.PreparedStatement" %>
 <%@ page import="java.sql.ResultSet" %>
-<%
+<%@ page import = "java.util.regex.Pattern"%>
 
-String userID = request.getParameter("id_value");
-String userPw = request.getParameter("pw_value");
+<%
+// 자바에서 문자열은 큰따옴표만"", 문자열 비교는 equals()
+
+String userID = null;
+String userPw = null;
+String sql = null;
+
 ResultSet rs = null;
 PreparedStatement query = null;
 Connection connect = null;
-//정규표현식 사용
 try{
-    //if문수정
-    if(userID.equals("") || userPw.equals("")){
+
+    //정규표현식
+    userID = request.getParameter("id_value");
+    String userIDRegex = "^[a-zA-Z가-힣][a-zA-Z가-힣0-9]{0,19}$";
+
+    userPw = request.getParameter("pw_value");
+    //String userPwRegex = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{1,20})$";
+
+    if(!Pattern.matches(userIDRegex,userID)){
         throw new Exception();
-    }else{
-        userID = userID.trim();
-        userPw = userPw.trim();
     }
-    if(userID.length()>20){
-        throw new Exception();
-    }else if(userPw.length()>20){
-        throw new Exception();
-    }
+    //else if(!Pattern.matches(userName,userName)){
+        //throw new Exception();
+    //}
 
     String dbURL = "jdbc:mysql://localhost/week9";
     String dbID = "stageus";
     String dbPassword = "1234";
-    String sql = "SELECT * FROM user WHERE id = ? AND pw = ? ";
+    sql = "SELECT a.idx,name,phonenumber, t.team as team , p.position as position FROM account a ";
+    sql+= " JOIN team_list t ON a.team = t.idx ";
+    sql+= " JOIN position_list p ON a.position = p.idx ";
+    sql+= " WHERE id = ? AND pw = ? ";
 
     Class.forName("com.mysql.jdbc.Driver"); //db연결
     connect = DriverManager.getConnection(dbURL,dbID,dbPassword);
@@ -40,26 +49,21 @@ try{
     if(rs.next()){
         //필요한건 세션저장 ㄱㄱ
         String userIdx = rs.getString(1);
-        String userName = rs.getString(4);
-        String userPhonenumber = rs.getString(5);
-        String userPosition = rs.getString(6);
-        String userTeam = rs.getString(7);
+        String userName = rs.getString(2);
+        String userPhonenumber = rs.getString(3);
+        String userTeam = rs.getString(4);
+        String userPosition = rs.getString(5);
 
         session.setAttribute("userIdx",userIdx);
         session.setAttribute("userName",userName);
         session.setAttribute("userPhonenumber",userPhonenumber);
-        session.setAttribute("userPosition",userPosition);
         session.setAttribute("userTeam",userTeam);
+        session.setAttribute("userPosition",userPosition);
 
-        userPosition = rs.getString("position");
-        if(userPosition.equals("팀장")){   // 자바에서 문자열은 큰따옴표만"", 문자열 비교는 equals()
-            response.sendRedirect("../page/leaderSchedule.jsp");
-        }else{
-            response.sendRedirect("../page/schedule.jsp");
-        }
+        response.sendRedirect("../page/schedule.jsp");
     }
 }catch(Exception e){
-    response.sendRedirect("../page/index.jsp");
+    //response.sendRedirect("../page/index.jsp");
 }finally{
     if (rs != null) {
         rs.close();
@@ -84,8 +88,17 @@ try{
     console.log("<%=userID%>")
     console.log("<%=userPw%>")
 
+
+    console.log("<%=sql%>")
+    console.log('<%=session.getAttribute("userIdx")%>')
+    console.log('<%=session.getAttribute("userName")%>')
+    console.log('<%=session.getAttribute("userPhonenumber")%>')
+    console.log('<%=session.getAttribute("userPosition")%>')
+    console.log('<%=session.getAttribute("userTeam")%>')
+
+
     alert("일치하는 회원정보 없음")
-    // location.href="../page/index.jsp"
+    location.href="../page/index.jsp"
 
 </script>
 </body>

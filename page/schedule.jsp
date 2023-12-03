@@ -14,45 +14,51 @@
 <%
 request.setCharacterEncoding("utf-8");
 
-String userIdx = (String)session.getAttribute("userIdx");
-String userName = (String)session.getAttribute("userName");
-String userPhonenumber = (String)session.getAttribute("userPhonenumber");
-String userPosition = (String)session.getAttribute("userPosition");
-String userTeam = (String)session.getAttribute("userTeam");
-
 ResultSet rs = null;
 PreparedStatement query = null;
 Connection connect = null;
 
 Calendar calendar = Calendar.getInstance();
-String year = request.getParameter("selectYear");
-if(year==null){
-    year = Integer.toString(calendar.get(Calendar.YEAR));
-}
-String month = request.getParameter("selectMonth");
-if(month==null){
-    month = Integer.toString(calendar.get(Calendar.MONTH) + 1);
-}
-String day = request.getParameter("selectDay");
-if(day==null){
-    day = Integer.toString(calendar.get(Calendar.DAY_OF_MONTH));
-}
+String userIdx = null;
+String userName = null;
+String userPhonenumber = null;
+String userPosition = null;
+String userTeam = null;
+String year = null;
+String month = null;
+String day = null;
 
 ArrayList<ArrayList<String>> scheduleList = new ArrayList<ArrayList<String>>();
 
 try{
+    userIdx = (String)session.getAttribute("userIdx");
+    userName = (String)session.getAttribute("userName");
+    userPhonenumber = (String)session.getAttribute("userPhonenumber");
+    userPosition = (String)session.getAttribute("userPosition");
+    userTeam = (String)session.getAttribute("userTeam");
+
+    year = request.getParameter("selectYear");
+    if(year==null){
+        year = Integer.toString(calendar.get(Calendar.YEAR));
+    }
+    month = request.getParameter("selectMonth");
+    if(month==null){
+        month = Integer.toString(calendar.get(Calendar.MONTH) + 1);
+    }
+    day = request.getParameter("selectDay");
+    if(day==null){
+        day = Integer.toString(calendar.get(Calendar.DAY_OF_MONTH));
+    }
+
     //if문 userIdx사용, if문으로 캐치보내면 else노필요
-    if(session.getAttribute("userIdx") == null){ 
+    if(userIdx == null){ 
         throw new Exception();
     }
-    userIdx = (String)session.getAttribute("userIdx");
 
     Class.forName("com.mysql.jdbc.Driver"); //db연결
     connect = DriverManager.getConnection("jdbc:mysql://localhost/week9","stageus","1234");
-    String sql = "SELECT date FROM schedule s ";
-    sql += " JOIN user u ON user_idx = u.idx WHERE u.name = ? AND YEAR(date) = ? AND MONTH(date) = ? ";
-//조인필요없음.
-//이름말고 idx로검색
+    String sql = "SELECT date FROM schedule s WHERE idx = ? AND YEAR(date) = ? AND MONTH(date) = ?  ";
+
     query = connect.prepareStatement(sql);
     query.setString(1,userName);
     query.setString(2,year);

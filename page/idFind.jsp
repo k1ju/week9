@@ -11,9 +11,9 @@
 <body>
     <div id="container">
         <h1 id="title">Time Tree</h1>
-        <form action="../action/idFindAction.jsp" onsubmit="return idFindEvent()">
-            <input id="name_value" class="input" type="text" placeholder="이름" name="name_value">
-            <input id="phonenumber_value" class="input" type="text" placeholder="연락처" name="phonenumber_value">
+        <form class="form"action="../action/idFindAction.jsp" onsubmit="return idFindEvent()">
+            <input id="input_name" class="input" type="text" placeholder="이름" name="name_value">
+            <input id="input_phonenumber" class="input" type="text" placeholder="연락처" name="phonenumber_value">
             <input id="idFind_btn" class="Btn" type="submit" value="아이디찾기">
         </form>
     </div>
@@ -21,19 +21,21 @@
 
 <script>
 function idFindEvent(){
-    var nameValue = document.getElementById("name_value").value.replace(/ /g,"")
-    var phonenumberValue = document.getElementById("phonenumber_value").value.replace(/[^0-9]/g,"")
-    console.log(nameValue)
-    console.log(phonenumberValue)
+    var nameRegex = /^[가-힣]{2,4}$/
+    var name = document.getElementById("input_name").value
 
-    if(!!nameValue || !!phonenumberValue){
+    var phonenumberRegex = /^[0-9]{10,11}$/
+    console.log("기록")
+    var phonenumber = document.getElementById("input_phonenumber").value
+
+    if(!name || !phonenumber){
         alert("값을 입력하세요")
         return false
-    } else if(nameValue.length>10){
-        alert("이름 최대 10글자 제한")
+    } else if( !nameRegex.test(name) ){
+        console.log("이름 한글 2~4글자")
         return false
-    } else if(phonenumberValue.length>13 || phonenumberValue <10){
-        alert("연락처 글자 제한 10~13글자")
+    }else if(!phonenumberRegex.test(phonenumber)){
+        console.log("전화번호 숫자 10,11글자")
         return false
     }
 }

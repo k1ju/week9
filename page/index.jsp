@@ -31,22 +31,27 @@
     }
 
     function checkEvent(){
-        id = document.getElementById("input_id").value//정규표현식 예외처리
-        pw = document.getElementById("input_pw").value
 
-        console.log("로그인 검사시작")
+        var idRegex = /^[a-zA-Z가-힣][a-zA-Z가-힣0-9]{0,19}$/
+        var id = document.getElementById("input_id").value
+
+        var pwRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{1,20})$/
+        var pw = document.getElementById("input_pw").value
 
         if(!id || !pw){ 
-            console.log("하나라도 빈값이라면")
             alert("값을 입력해주세요")
             return false
-        }else if(id.length>20){
+        }else if(!idRegex.test(id)){
             alert("아이디 글자수제한 20글자")
             return false
-        }else if(pw.length>20){
-            alert("비밀번호 글자수제한 20글자")
-            return false
         }
+        //else if(!pwRegex.test(pw)){
+            //alert("비밀번호 문자,숫자,특수문자포함 20글자이하")
+            //return false
+        //}
+
+        console.log(id)
+        console.log(pw)
     }
 </script>
 </body>

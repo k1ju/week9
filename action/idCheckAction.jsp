@@ -23,7 +23,7 @@
 
         Class.forName("com.mysql.jdbc.Driver"); //db연결
         Connection connect = DriverManager.getConnection(dbURL,dbID,dbPassword);
-        String sql = "SELECT id FROM user WHERE id = ? ";
+        String sql = "SELECT id FROM account WHERE id = ? ";
         PreparedStatement query = connect.prepareStatement(sql);
         query.setString(1,inputID);
 

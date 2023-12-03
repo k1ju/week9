@@ -3,58 +3,65 @@
 <%@ page import="java.sql.Connection" %>
 <%@ page import="java.sql.PreparedStatement" %>
 <%@ page import="java.sql.ResultSet" %>
+<%@ page import = "java.util.regex.Pattern"%>
+
 <%
-String userID = request.getParameter("id_value");
-String userName = request.getParameter("name_value");
-String userPhonenumber = request.getParameter("phonenumber_value");
+Connection connect = null;
+PreparedStatement query = null;
+ResultSet rs = null;
+
+String userID = null;
+String userName = null;
+String userPhonenumber = null;
 String userPw = null;
 
 try{
+    userID = request.getParameter("id_value");
+    String userIDRegex = "^[a-zA-Z가-힣][a-zA-Z가-힣0-9]{0,19}$";
 
-    //if문수정
-    if(userID.equals("") || userName.equals("") || userPhonenumber.equals("")){
-        throw new Exception();
-    }else{
-        userID = userID.trim();
-        userName = userName.trim();
-        userPhonenumber = userPhonenumber.replaceAll("[^0-9]","");
-    }
+    userName = request.getParameter("name_value");
+    String userNameRegex = "^[가-힣]{2,4}$";
 
-    if(userID.length() > 10){
+    userPhonenumber = request.getParameter("phonenumber_value");
+    String userPhonenumberRegex = "^[0-9]{10,11}$";
+
+    if(!Pattern.matches(userIDRegex,userID)){
         throw new Exception();
-    }else if(userName.length() > 10){
+    }else if(!Pattern.matches(userName,userName)){
         throw new Exception();
-    }else if(userPhonenumber.length() > 13 || userPhonenumber.length() < 10){
+    }else if(!Pattern.matches(userPhonenumber,userPhonenumber)){
         throw new Exception();
     }
 
     String dbURL = "jdbc:mysql://localhost/week9";
     String dbID = "stageus";
     String dbPassword = "1234";
-    String sql = "SELECT pw FROM user WHERE id = ? AND name = ? AND phonenumber = ? ";
+    String sql = "SELECT pw FROM account WHERE id = ? AND name = ? AND phonenumber = ? ";
     Class.forName("com.mysql.jdbc.Driver"); //db연결
-    Connection connect = DriverManager.getConnection(dbURL,dbID,dbPassword);
-    PreparedStatement query = connect.prepareStatement(sql);
+    connect = DriverManager.getConnection(dbURL,dbID,dbPassword);
+    query = connect.prepareStatement(sql);
 
     query.setString(1,userID);
     query.setString(2,userName);
     query.setString(3,userPhonenumber);
-    ResultSet rs = query.executeQuery();
+    rs = query.executeQuery();
     
     if(rs.next()){
         userPw = rs.getString(1);
     }
 
-    rs.close();
-    query.close();
-    connect.close();
-
 }catch(Exception e){
-    response.sendRedirect("../page/pwFind.jsp");
-
-    rs.close();
-    query.close();
-    connect.close();
+    //response.sendRedirect("../page/pwFind.jsp");
+}finally{
+    if (rs != null) {
+        rs.close();
+    }
+    if (query != null) {
+        query.close();
+    }
+    if (connect != null) {
+        connect.close();
+    }
 }
 
 %>
@@ -69,13 +76,15 @@ try{
     <script>
         console.log("<%=userPw%>")
 
-        if("<%=userPw%>" != ""){
-            alert("회원님의 비밀번호는"+ "<%=userPw%>")
-        location.href="../page/pwFind.jsp"
-        }else{
+        if("<%=userPw%>" == "null"){
             alert("일치하는 회원정보없음")
             location.href="../page/pwFind.jsp"
+        }else{
+            alert("회원님의 비밀번호는"+ "<%=userPw%>")
+            location.href="../page/index.jsp"
         }
+
+
     </script>
 </body>
 </html>

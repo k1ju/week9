@@ -36,12 +36,14 @@
     margin-left: auto;
     margin-right: auto;
 }
-form{
-    /* border: solid 1px black; */
+.form{
+    /* border: 2px solid black; */
     margin:0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 #idFind_btn{
-    /* border: solid 1px black; */
     margin-top: 20px;
 }
 

@@ -57,6 +57,7 @@ try{
     connect = DriverManager.getConnection("jdbc:mysql://localhost/week9","stageus","1234");
     // 팀원명단 가져오기sql
     String sql = "SELECT * FROM user WHERE team = (SELECT team FROM user WHERE idx = ?)";
+
     query = connect.prepareStatement(sql);
     query.setString(1,userIdx);
     rs = query.executeQuery();

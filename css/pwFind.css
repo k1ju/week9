@@ -34,11 +34,12 @@
     margin-left: auto;
     margin-right: auto;
 }
-form{
+.form{
     /* border: solid 1px black; */
     margin:0px;
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 #pwFind_btn{
     /* border: solid 1px black; */

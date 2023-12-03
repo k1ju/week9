@@ -1,18 +1,5 @@
 <%@ page language="java" contentType="text/html" pageEncoding="utf-8" %>
 
-//비밀번호 일치경우 예외사항처리
-<%
-    //String idChecked = request.getParameter("idChecked");
-    //String inputID = request.getParameter("inputID");
-    //String inputPw = request.getParameter("inputPw");
-    //String inputPwCheck = request.getParameter("inputPwCheck");
-    //String inputName = request.getParameter("inputName");
-    //String inputPhonenumber = request.getParameter("inputPhonenumber");
-
-    //String inputTeam= request.getParameter("inputTeam");
-    //String inputPosition= request.getParameter("inputPosition");
-%>
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,7 +14,7 @@
          
             <table>
                 <tr>
-                    <th></th>
+                    <th>아이디</th>
                     <!-- <form id = "idCheckForm" action="idCheckAction.jsp" onsubmit="return idCheckEvent()"> 폼안에 폼은 쓸수없음. 지워진다.-->
                         <td class="c2">
                             <input id = "input_id"  type="text" placeholder="아이디" name="id_value" onchange="checkBtnEvent()">
@@ -42,13 +29,13 @@
                     <!-- </form> -->
                 </tr>
                 <tr>
-                    <th></th>
+                    <th>비밀번호</th>
                     <td class="c2">
                         <input id = "input_pw"  type="password" placeholder="비밀번호" name="pw_value">
                     </td>
                 </tr>
                 <tr>
-                    <th></th>
+                    <th>비밀번호확인</th>
                     <td class="c2">
                         <input id = "input_pw_check"  type="password" placeholder="비밀번호 확인" name="pw_check_value">
                     </td>
@@ -57,13 +44,13 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <th></th>
+                    <th>이름</th>
                     <td class="c2 input_name">
                         <input id = "input_name"  type="text" placeholder="이름" name="name_value">
                     </td>
                 </tr>
                 <tr>
-                    <th></th>
+                    <th>연락처</th>
                     <td class="c2">
                         <input id = "input_phonenumber" type="text" placeholder="연락처" name="phonenumber_value">
                     </td>
@@ -105,12 +92,21 @@ var inputIDTag = document.getElementById("input_id")
 
 //회원가입 버튼
 function checkEvent(){
+    
+    //아이디 정규표현식
+    var idRegex = /^[a-zA-Z가-힣][a-zA-Z가-힣0-9]{0,19}$/g
+    var id = document.getElementById("input_id").value
 
-    var id = document.getElementById("input_id").value.replace(/ /g,"")
-    var pw = document.getElementById("input_pw").value.replace(/ /g,"")
-    var pw_check = document.getElementById("input_pw_check").value.replace(/ /g,"")
-    var name = document.getElementById("input_name").value.replace(/ /g,"")
-    var phonenumber = document.getElementById("input_phonenumber").value.replace(/[^0-9]/g,"")
+    var pwRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{1,20})$/
+    var pw = document.getElementById("input_pw").value.trim()
+    var pw_check = document.getElementById("input_pw_check").value.trim()
+
+    var nameRegex = /^[가-힣]{2,4}$/
+    var name = document.getElementById("input_name").value.trim()
+
+    var phonenumberRegex = /^[0-9]{10,11}$/
+    var phonenumber = document.getElementById("input_phonenumber").value.trim().replaceAll(/[^0-9]/,"")
+
     var teamTagList = document.getElementsByName("team_value")
     var positionTagList = document.getElementsByName("position_value")
 
@@ -126,28 +122,32 @@ function checkEvent(){
             break;
         }
     }
-//각항목정규표현식
+
     if(!id || !pw || !pw_check || !name || !phonenumber || !team || !position){ // 하나라도 널값이라면
        alert("필수값 입력해주세요")
        return false
-
-    }else if(pw.length>20){
-        alert("비밀번호 최대 20글자 제한")
-        return false
-    }else if(name.length>9){
-        alert("이름 최대 10글자 제한")
-        return false
-    }else if(phonenumber.length>12 || phonenumber.length<10){
-        alert("연락처 10,11글자 제한")
-        return false
     }else if(pw != pw_check){
         alert("비밀번호가 일치하지 않습니다")
         return false
     }else if(checkBtn.disabled==false){ // 아이디 중복확인이 안되어있다면, 
         alert("아이디 중복검사를 진행해주세요")
         return false
+    }else if(!(idRegex.test(id))){
+        console.log("아이디 20글자이하,첫글자 문자")
+       return false
+    }else if(!(pwRegex.test(pw))){
+        console.log("비밀번호 문자,숫자,특수문자 포함 20글자이하")
+        return false
+    }else if( !nameRegex.test(name) ){
+        console.log("이름 한글 2~4글자")
+        return false
+    }else if(!phonenumberRegex.test(phonenumber)){
+        console.log("전화번호 숫자10,11글자")
+        return false
     }
+
 }
+
 function checkBtnEvent(){
     console.log("중복버튼활성화")
     checkBtn.disabled=false
