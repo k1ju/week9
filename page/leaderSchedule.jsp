@@ -78,7 +78,7 @@ try{
     rs2 = query2.executeQuery();
     
     while(rs2.next()){
-        ArrayList<String> schedule = new ArrayList<String>();  
+        ArrayList<String> schedule = new ArrayList<String>();
         String date = rs2.getString(1);
         schedule.add("\"" + date + "\"");
         scheduleList.add(schedule);
@@ -116,7 +116,7 @@ try{
 
 <!-- 헤더 -->
     <header>
-        <h1 onclick="moveToDest('schedule.jsp')">Time Tree</h1>
+        <h1 onclick="moveToDestEvent('schedule.jsp')">Time Tree</h1>
         <div id="current_date"></div>
         <button id="btn_menu" onclick="menuBarEvent()">
             <Img id="icon_menu" src="../image/icon_menu2.png">
@@ -144,12 +144,12 @@ try{
                 <td class="2c"><%=userTeam%></td>
             </tr>
         </table>
-        <button id="btn_update" onclick="moveToDest('infoUpdate.jsp')">정보수정</button>
+        <button id="btn_update" onclick="moveToDestEvent('infoUpdate.jsp')">정보수정</button>
         <div class="nav_section">팀원목록확인</div>
         <div id="team_member">
             <!-- 팀원 추가 -->
         </div>
-        <button class="logout_btn" onclick="moveToDest('../action/logoutAction.jsp')">로그아웃</button>
+        <button class="logout_btn" onclick="moveToDestEvent('../action/logoutAction.jsp')">로그아웃</button>
     </nav>
 <!-- 메인 -->
     <main>
@@ -237,7 +237,7 @@ document.getElementById("month_checked" + (selectMonth)).style.display="block"
 
 //함수정의
 
-function moveToDest(e){
+function moveToDestEvent(e){
     location.href=e
 }
 function makeCalenderName(ownerName,selectYear,selectMonth){

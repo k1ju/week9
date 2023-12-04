@@ -15,10 +15,10 @@ PreparedStatement query = null;
 
 try{
     userID = request.getParameter("id_value");
-    String userIDRegex = /^[a-zA-Z가-힣][a-zA-Z가-힣0-9]{0,19}$/
+    String userIDRegex = "^[a-zA-Z가-힣][a-zA-Z가-힣0-9]{0,19}$""
 
     userPw = request.getParameter("name_value");
-    String userPwRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{1,20})$/
+    String userPwRegex = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{1,20})$"
 
     userName = request.getParameter("name_value");
     String userNameRegex = "^[가-힣]{2,4}$";

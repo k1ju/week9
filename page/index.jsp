@@ -16,16 +16,16 @@
             <input class="input" id="input_pw" type="password" placeholder="PASSWORD" name="pw_value">
             <input id="login_btn"  type="submit" value="로그인">
         </form>
-        <button id="join_btn" class="Btn" onclick="moveToDest('join.jsp')" >회원가입</button>
+        <button id="join_btn" class="Btn" onclick="moveToDestEvent('join.jsp')" >회원가입</button>
         <div id="find_btn_box">
-            <button id="id_button" onclick="moveToDest('idFind.jsp')">아이디찾기</button>
-            <button id="pw_button" onclick="moveToDest('pwFind.jsp')">비밀번호찾기</button>
+            <button id="id_button" onclick="moveToDestEvent('idFind.jsp')">아이디찾기</button>
+            <button id="pw_button" onclick="moveToDestEvent('pwFind.jsp')">비밀번호찾기</button>
         </div>
     </div>
 </body>
 
 <script>
-    function moveToDest(e){ //함수"이벤트"쓰기, 매개변수이름변경
+    function moveToDestEvent(e){ //함수"이벤트"쓰기, 매개변수이름변경
         console.log("클릭")
         location.href=e
     }

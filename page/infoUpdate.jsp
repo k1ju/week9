@@ -12,61 +12,33 @@
 <%
 request.setCharacterEncoding("utf-8");
 
-String userIdx = (String)session.getAttribute("userIdx");
-String userName = (String)session.getAttribute("userName");
-String userPhonenumber = (String)session.getAttribute("userPhonenumber");
-String userPosition = (String)session.getAttribute("userPosition");
-String userTeam = (String)session.getAttribute("userTeam");
+String userIdx = null;
+String userName = null;
+String userPhonenumber = null; 
+String userPosition = null;
+String userTeam = null;
 
 ResultSet rs = null;
 PreparedStatement query = null;
 Connection connect = null;
 
-ArrayList<ArrayList<String>> scheduleList = new ArrayList<ArrayList<String>>();
 
 try{
-    if(session.getAttribute("userIdx") == null){
+    userIdx = (String)session.getAttribute("userIdx");
+    userName = (String)session.getAttribute("userName");
+    userPhonenumber = (String)session.getAttribute("userPhonenumber");
+    userPosition = (String)session.getAttribute("userPosition");
+    userTeam = (String)session.getAttribute("userTeam");
+
+    if(userIdx == null){
         throw new Exception();
     }
-    userIdx = (String)session.getAttribute("userIdx");
-    
-    Class.forName("com.mysql.jdbc.Driver"); //db연결
-    connect = DriverManager.getConnection("jdbc:mysql://localhost/week9","stageus","1234");
-    String sql = "SELECT s.*,u.name,u.phonenumber,u.position,u.team FROM schedule s ";
-    sql += " LEFT JOIN user u ON s.user_idx = u.idx WHERE s.user_idx = ? ";
-    query = connect.prepareStatement(sql);
-    query.setString(1,userIdx);
-    rs = query.executeQuery();
-    
-    while(rs.next()){
-        ArrayList<String> schedule = new ArrayList<String>();
-        String date = rs.getString("date");
-        String content = rs.getString("content");
-        String executionStatus = rs.getString("execution_status");
-        userName = rs.getString("name");
-        userPhonenumber = rs.getString("phonenumber");
-        userPosition = rs.getString("position");
-        userTeam = rs.getString("team");
 
-        schedule.add(date);
-        schedule.add(content);
-        schedule.add(executionStatus);
-        scheduleList.add(schedule);
-    }
-
+    
 }catch(Exception e){
     response.sendRedirect("index.jsp");
-}finally{
-    if (rs != null) {
-        rs.close();
-    }
-    if (query != null) {
-        query.close();
-    }
-    if (connect != null) {
-        connect.close();
-    }
 }
+
 %>
 
 <head>
@@ -81,7 +53,7 @@ try{
 
     <!-- 헤더 -->
     <header>
-        <h1 onclick="moveToDest('schedule.jsp')">Time Tree</h1>
+        <h1 onclick="moveToDestEvent('schedule.jsp')">Time Tree</h1>
         <div id="current_date"></div>
         <button id="btn_menu" onclick="menuBarEvent()">
             <Img id="icon_menu" src="../image/icon_menu2.png">
@@ -109,12 +81,12 @@ try{
                 <td class="2c"><%=userTeam%></td>
             </tr>
         </table>
-        <button id="btn_update" onclick="moveToDest('infoUpdate.jsp')">정보수정</button>
+        <button id="btn_update" onclick="moveToDestEvent('infoUpdate.jsp')">정보수정</button>
         <div class="nav_section">팀원목록확인</div>
         <div id="team_member">
             <!-- 팀원 추가 -->
         </div>
-        <button class="logout_btn" onclick="moveToDest('../action/logoutAction.jsp')">로그아웃</button>
+        <button class="logout_btn" onclick="moveToDestEvent('../action/logoutAction.jsp')">로그아웃</button>
     </nav>
 
     <main>
@@ -170,10 +142,26 @@ var currentYear = date.getFullYear();
 var currentMonth = date.getMonth() + 1;
 var currentDay = date.getDate();
 
+console.log("<%=userIdx%>")
+console.log("<%=userTeam%>")
+
+var teamList = document.getElementsByName('team_value')
+var positionList = document.getElementsByName('position_value')
+for(var i=0;i<teamList.length;i++){
+    if(teamList[i].value == "<%=userTeam%>"){
+        teamList[i].checked = true
+    }
+}
+for(var i=0;i<positionList.length;i++){
+    if(positionList[i].value == "<%=userPosition%>"){
+        positionList[i].checked = true
+    }
+}
+
 // 날짜표시
 document.getElementById("current_date").innerHTML = currentYear + "-" +  currentMonth + "-" + currentDay
 
-function moveToDest(e){
+function moveToDestEvent(e){
     location.href=e
 }
 //슬라이드바 토글이벤트
@@ -191,8 +179,8 @@ function formEvent(){
     var userPhonenumber = document.getElementById("input_phonenumber").value
     var userTeam = null
     var userPosition = null
-    var userTeamList = document.getElementsByName("team_value")
-    var userPositionList = document.getElementsByName("position_value")
+    userTeamList = document.getElementsByName("team_value")
+    userPositionList = document.getElementsByName("position_value")
 
     for(var i=0;i<userTeamList.length;i++){
         if(userTeamList[i].checked == true){

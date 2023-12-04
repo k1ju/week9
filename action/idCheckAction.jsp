@@ -3,36 +3,53 @@
 <%@ page import="java.sql.Connection" %>
 <%@ page import="java.sql.PreparedStatement" %>
 <%@ page import="java.sql.ResultSet" %>
+<%@ page import = "java.util.regex.Pattern"%>
 
 
 <%
-    request.setCharacterEncoding("utf-8");
+request.setCharacterEncoding("utf-8");
 
-    String inputID = request.getParameter("inputID");
-    boolean idChecked = true;
-    String dbURL = "jdbc:mysql://localhost/week9";
-    String dbID = "stageus";
-    String dbPassword = "1234";
+String inputID = request.getParameter("inputID");
+boolean idChecked = true;
+String sql = null;
+String dbURL = "jdbc:mysql://localhost/week9";
+String dbID = "stageus";
+String dbPassword = "1234";
 
-    if(inputID.length()>20){
-        idChecked=false;
+ResultSet rs = null;
+PreparedStatement query = null;
+Connection connect = null;
 
-    }else if(inputID == null || inputID == ""){
-        idChecked=false;
-    } else{
+try{
+    String userIDRegex = "^[a-zA-Z가-힣][a-zA-Z가-힣0-9]{0,19}$";
 
-        Class.forName("com.mysql.jdbc.Driver"); //db연결
-        Connection connect = DriverManager.getConnection(dbURL,dbID,dbPassword);
-        String sql = "SELECT id FROM account WHERE id = ? ";
-        PreparedStatement query = connect.prepareStatement(sql);
-        query.setString(1,inputID);
-
-        ResultSet rs = query.executeQuery();
-
-        if(rs.next()){
-            idChecked=false;
-        }
+    if(!Pattern.matches(userIDRegex,inputID)){
+        throw new Exception();
     }
+
+    Class.forName("com.mysql.jdbc.Driver"); //db연결
+    connect = DriverManager.getConnection(dbURL,dbID,dbPassword);
+    sql = "SELECT id FROM account WHERE id = ? ";
+    query = connect.prepareStatement(sql);
+    query.setString(1,inputID);
+    rs = query.executeQuery();
+
+    if(rs.next()){
+        idChecked=false;
+    }
+}catch(Exception e){
+    //response.sendRedirect("../page/join.jsp");
+}finally{
+    if (rs != null) {
+        rs.close();
+    }
+    if (query != null) {
+        query.close();
+    }
+    if (connect != null) {
+        connect.close();
+    }
+}
 
 %>
 
@@ -46,8 +63,10 @@
 
 <script>
     var idChecked = <%=idChecked%>
+    console.log("<%=sql%>")
+    console.log("<%=inputID%>")
 
-    if (idChecked ==true){ 
+    if (idChecked == true){ 
         console.log("중복아닌경우")
         console.log(idChecked)
         window.opener.idBanner.innerHTML="사용가능한 아이디"

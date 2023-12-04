@@ -16,6 +16,8 @@ request.setCharacterEncoding("utf-8");
 
 ResultSet rs = null;
 PreparedStatement query = null;
+ResultSet rs2 = null;
+PreparedStatement query2 = null;
 Connection connect = null;
 
 Calendar calendar = Calendar.getInstance();
@@ -24,11 +26,15 @@ String userName = null;
 String userPhonenumber = null;
 String userPosition = null;
 String userTeam = null;
+String member = null;
+String ownerName = null;
+
 String year = null;
 String month = null;
 String day = null;
 
 ArrayList<ArrayList<String>> scheduleList = new ArrayList<ArrayList<String>>();
+ArrayList<String> memberList = new ArrayList<String>();
 
 try{
     userIdx = (String)session.getAttribute("userIdx");
@@ -36,21 +42,26 @@ try{
     userPhonenumber = (String)session.getAttribute("userPhonenumber");
     userPosition = (String)session.getAttribute("userPosition");
     userTeam = (String)session.getAttribute("userTeam");
+    ownerName = request.getParameter("ownerName");
+    if(ownerName==null){
+        ownerName = userName;
+    }
 
     year = request.getParameter("selectYear");
+    month = request.getParameter("selectMonth");
+    day = request.getParameter("selectDay");
+
     if(year==null){
         year = Integer.toString(calendar.get(Calendar.YEAR));
     }
-    month = request.getParameter("selectMonth");
     if(month==null){
         month = Integer.toString(calendar.get(Calendar.MONTH) + 1);
     }
-    day = request.getParameter("selectDay");
     if(day==null){
         day = Integer.toString(calendar.get(Calendar.DAY_OF_MONTH));
     }
 
-    //if문 userIdx사용, if문으로 캐치보내면 else노필요
+
     if(userIdx == null){ 
         throw new Exception();
     }
@@ -60,7 +71,7 @@ try{
     String sql = "SELECT date FROM schedule s WHERE idx = ? AND YEAR(date) = ? AND MONTH(date) = ?  ";
 
     query = connect.prepareStatement(sql);
-    query.setString(1,userName);
+    query.setString(1,userIdx);
     query.setString(2,year);
     query.setString(3,month);
     rs = query.executeQuery();
@@ -72,14 +83,34 @@ try{
         scheduleList.add(schedule);
     }
 
+    // 팀원명단 가져오기sql
+    if(userPosition == "팀장"){
+
+        String sql2 = "SELECT * FROM account WHERE team = (SELECT team FROM account WHERE idx = ?)";
+        query2 = connect.prepareStatement(sql2);
+        query2.setString(1,userIdx);
+        rs2 = query2.executeQuery();
+        
+        while(rs2.next()){
+            member = rs2.getString("name");
+            memberList.add("\"" + member + "\"");
+        }
+    }
+
 }catch(Exception e){
-    response.sendRedirect("index.jsp");
+    //response.sendRedirect("index.jsp");
 }finally{
     if (rs != null) {
         rs.close();
     }
     if (query != null) {
         query.close();
+    }
+    if (rs2 != null) {
+        rs2.close();
+    }
+    if (query2 != null) {
+        query2.close();
     }
     if (connect != null) {
         connect.close();
@@ -98,7 +129,7 @@ try{
 
 <!-- 헤더 -->
     <header>
-        <h1 onclick="moveToDest('schedule.jsp')">Time Tree</h1>
+        <h1 onclick="moveToDestEvent('schedule.jsp')">Time Tree</h1>
         <div id="current_date"></div>
         <button id="btn_menu" onclick="menuBarEvent()">
             <Img id="icon_menu" src="../image/icon_menu2.png">
@@ -126,8 +157,14 @@ try{
                 <td class="2c"><%=userTeam%></td>
             </tr>
         </table>
-        <button id="btn_update" onclick="moveToDest('infoUpdate.jsp')">정보수정</button>
-        <button class="logout_btn" onclick="moveToDest('../action/logoutAction.jsp')">로그아웃</button>
+        <button id="btn_update" onclick="moveToDestEvent('infoUpdate.jsp')">정보수정</button>
+        <div class="nav_section">
+            팀원목록확인
+        </div>
+        <div id="team_member">
+            <!-- 팀원 추가 -->
+        </div>
+        <button class="logout_btn" onclick="moveToDestEvent('../action/logoutAction.jsp')">로그아웃</button>
     </nav>
 <!-- 메인 -->
     <main>
@@ -151,6 +188,8 @@ var selectYear = <%=year%>
 var selectMonth = <%=month%>
 var selectDay = <%=day%>
 var ownerName = "<%=userName%>"
+var memberList = <%=memberList%>
+
 var nav = document.getElementById("navigation")
 var menuBtn = document.getElementById("icon_menu")
 var arrowLeft = document.getElementById("arrow_left_btn")
@@ -162,7 +201,8 @@ var dayBtnList = document.getElementsByClassName("dayBtn")
 console.log(selectYear)
 console.log(selectMonth)
 console.log(<%=scheduleList%>)
-
+console.log("<%=userIdx%>")
+console.log("<%=memberList%>")
 
 //현재날짜 표시  
 document.getElementById("current_date").innerHTML = date.getFullYear() + "-" +  (date.getMonth() + 1) + "-" + date.getDate();
@@ -171,6 +211,7 @@ document.getElementById("current_date").innerHTML = date.getFullYear() + "-" +  
 
 makeCalenderName(ownerName,selectYear,selectMonth)
 makeCalender(selectMonth)
+teamMember(memberList)
 
 // 월 버튼 생성
 for(var i=0;i<12;i++){
@@ -204,20 +245,31 @@ for(var i=0;i<12;i++){
 
         makeCalenderName(ownerName,selectYear,selectMonth)
         makeCalender(selectMonth)
-
-        let url = "leaderSchedule.jsp?ownerName=" + ownerName + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
+    //리더페이지에서 코드 옮겨오고, 스케쥴 페이지 하나로 통합
+        let url = "schedule.jsp?ownerName=" + ownerName + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
         window.open(url,"_self")
     })
 }
+
 document.getElementById("month_checked" + (selectMonth)).style.display="block"
+
 
 //함수정의
 
-function moveToDest(e){
+function moveToDestEvent(e){
     location.href=e
 }
 function makeCalenderName(ownerName,selectYear,selectMonth){
     ownerCalender.innerHTML = ownerName + "팀원의 " + selectYear + "년 " + selectMonth + "월 일정"
+}
+function teamMember(memberList){
+    for(var i=0;i<memberList.length;i++){
+        var member = document.createElement("a")
+        member.innerHTML=memberList[i]
+        member.classList.add("member")
+        member.href= "memberSchedule.jsp"
+        document.getElementById("team_member").appendChild(member)
+    }
 }
 //날짜 생성함수
 function makeCalender(selectMonth){
@@ -278,7 +330,7 @@ function makeCalender(selectMonth){
     }
 }
 // 모달열기, 함수명에 이벤트쓰기
-function getModal(){
+function getModalEvent(){
     url= "scheduleShowAction.jsp?ownerName=" + ownerName + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
     url+= "&selectDay=" + 
     window.open("modal.jsp","_blank","width=700,height=400")
@@ -304,7 +356,7 @@ function menuBarEvent(){
         nav.style.right="-300px"
     }
 }
-//엘리먼트생성 js로빼기
+//createElement같은 이벤트함수 아닌건 js로빼기
 
 </script>
 

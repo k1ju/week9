@@ -27,9 +27,6 @@ try{
     if(!Pattern.matches(userIDRegex,userID)){
         throw new Exception();
     }
-    //else if(!Pattern.matches(userName,userName)){
-        //throw new Exception();
-    //}
 
     String dbURL = "jdbc:mysql://localhost/week9";
     String dbID = "stageus";

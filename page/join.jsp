@@ -133,16 +133,16 @@ function checkEvent(){
         alert("아이디 중복검사를 진행해주세요")
         return false
     }else if(!(idRegex.test(id))){
-        console.log("아이디 20글자이하,첫글자 문자")
+        alert("아이디 20글자이하,첫글자 문자")
        return false
     }else if(!(pwRegex.test(pw))){
-        console.log("비밀번호 문자,숫자,특수문자 포함 20글자이하")
+        alert("비밀번호 문자,숫자,특수문자 포함 20글자이하")
         return false
     }else if( !nameRegex.test(name) ){
-        console.log("이름 한글 2~4글자")
+        alert("이름 한글 2~4글자")
         return false
     }else if(!phonenumberRegex.test(phonenumber)){
-        console.log("전화번호 숫자10,11글자")
+        alert("전화번호 숫자10,11글자")
         return false
     }
 
@@ -154,9 +154,21 @@ function checkBtnEvent(){
     checkBtn.style.backgroundColor="royalblue"
 }
 function idCheckEvent(){
-    var inputID = document.getElementById("input_id").value
-    var url = "../action/idCheckAction.jsp?inputID=" + encodeURIComponent(inputID)
-    window.open(url)
+    var id = document.getElementById("input_id").value
+    var idRegex = /^[a-zA-Z가-힣][a-zA-Z가-힣0-9]{0,19}$/g
+
+    var url = "../action/idCheckAction.jsp?inputID=" + encodeURIComponent(id)
+
+
+    if(!id ){ // 하나라도 널값이라면
+       alert("필수값 입력해주세요")
+       return false
+    }
+    if(!(idRegex.test(id))){
+        alert("아이디 20글자이하,첫글자 문자")
+       return false
+    }
+    window.open(url,"_blank")
     
     // window.open()
     // 팝업창으로 띄우고, 위에서 가져온 idValue를 보내주는 방법으로
@@ -165,7 +177,7 @@ function idCheckEvent(){
 }
 
 
-function moveToDest(e){
+function moveToDestEvent(e){
     console.log(e)
     location.href=e
 }
