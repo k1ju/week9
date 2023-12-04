@@ -91,12 +91,13 @@ try{
         <div id="modal_content">
             <!-- 일정추가 -->
         </div>
-        <form id="insert_plan" action="scheduleInsertAction.jsp">
-            <input id="plan_time" type="time">
+        <form id="insert_plan" action="../action/scheduleInsertAction.jsp" onsubmit="return scheduleInsertEvent() ">
+            <input id="plan_time" type="time" name="time_value">
             <!-- 시간 다이얼식으로 변경 -->
-            <input id = "input_plan" type="text">
+            <input id = "input_plan" type="text" name="content_value">
             <!-- <button id="btn_insert">확인 -->
             <input type="submit" id="btn_insert" value="확인">
+            <input type="hidden"  name="date_value">
         </form>
     </section>
 
@@ -111,6 +112,7 @@ console.log("<%=userIdx%>")
 console.log("<%=year%>")
 console.log("<%=month%>")
 console.log("<%=day%>")
+console.log("<%=year%>" + "-" + "<%=month%>" + "-" +"<%=day%>")
 
 
 var modal = document.getElementById("modal")
@@ -132,7 +134,7 @@ function makeArticle(list){
 
     for(var i=0;i< list.length;i++){
         let article = document.createElement("article") // 변수를 let으로 선언하여 블럭안에서 변수값유지
-        let form = document.createElement("form")
+        let form = document.createElement("div")
         let checkbox = document.createElement("input")
         let time = document.createElement("div")
         let todo = document.createElement("div")
@@ -145,11 +147,7 @@ function makeArticle(list){
 
         form.action = "scheduleUpdateAction.jsp"
         form.classList.add("article_form")
-        form.onsubmit = (function(event) {
-            updateEvent(i)
-            event.preventDefault()
-        })
-
+        
         checkbox.type="checkbox"
         checkbox.id= "checkbox" + i
         checkbox.classList.add("article_checkbox")
@@ -203,13 +201,8 @@ function makeArticle(list){
         confirmBtn.id="confirm_btn"+i
         confirmBtn.classList.add("article_btn")
         confirmBtn.classList.add("article_update")
-        confirmBtn.onclick = (function(index){
-            return function(){
-                updateEvent(index)         
-            }
-        })(i)
 
-        updateBtn.onclick = (function(index) {
+        confirmBtn.onclick = (function(index) {
             return function(){
                 console.log("클릭")
                 updateModeEvent(index);
@@ -228,7 +221,6 @@ function makeArticle(list){
         form.appendChild(todo)
         form.appendChild(todoUpdate)
         form.appendChild(confirmBtn)
-
         form.appendChild(updateBtn)
         form.appendChild(deleteBtn)
 
@@ -262,21 +254,25 @@ function updateModeEvent(i){
 // confirmBtn.addEventListener('click',function(){
 function updateEvent(i){
     console.log("클릭")
-    checkbox.classList.add("article_update")
-    timeUpdate.classList.add("article_update")
-    todoUpdate.classList.add("article_update")
-    confirmBtn.classList.add("article_update")
+    document.getElementById("checkbox"+i).classList.add("article_update")
+    document.getElementById("time_update"+i).classList.add("article_update")
+    document.getElementById("todo_update"+i).classList.add("article_update")
+    document.getElementById("confirm_btn"+i).classList.add("article_update")
 
-    time.classList.remove("article_update")
-    todo.classList.remove("article_update")
-    updateBtn.classList.remove("article_update")
-    deleteBtn.classList.remove("article_update")
+    document.getElementById("time"+i).classList.remove("article_update")
+    document.getElementById("todo"+i).classList.remove("article_update")
+    document.getElementById("update_btn"+i).classList.remove("article_update")
+    document.getElementById("delete_btn"+i).classList.remove("article_update")
 
-    if(!timeUpdate.value || !todoUpdate.value ){
-        return false
+    if(!document.getElementById("time_update"+i).value || !document.getElementById("todo_update"+i).value ){
+        alert("값을 입력해주세요")
+    }else{
+        var url = "scheduleUpdateAction.jsp?"
+        window.open(url,"_self")
+
+    location.href = "scheduleUpdateAction.jsp"
+
     }
-    return false
-    // location.href = "scheduleUpdateAction.jsp"
 }
 //삭제버튼 이벤트
 function scheduleDeleteEvent(i){
@@ -287,6 +283,20 @@ function scheduleDeleteEvent(i){
     }else{
         return
     }
+}
+//일정 입력 이벤트
+function scheduleInsertEvent(){
+    var time =  document.getElementById("plan_time").value
+    var content =  document.getElementById("input_plan").value
+    
+    if(!time || !content){
+        alert("값을 입력해주세요")
+        return false
+    }
+    document.getElementsByName("date_value")[0].value = '<%=year%>'+"-"+"<%=month%>"+"-"+"<%=day%>"
+
+    console.log(document.getElementsByName("date_value")[0].value)
+    
 }
 
 
