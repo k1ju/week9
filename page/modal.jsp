@@ -10,32 +10,38 @@
 <%@ page import="java.util.ArrayList" %>
 //모달 css 수정하기
 <%
-String userIdx = (String)session.getAttribute("userIdx");
-String userName = (String)session.getAttribute("userName");
 
 ResultSet rs = null;
 PreparedStatement query = null;
 Connection connect = null;
-
-String year = request.getParameter("selectYear");
-String month = request.getParameter("selectMonth");
-String day = request.getParameter("selectDay");
+String sql=null;
+String userIdx = null;
+String userName = null;
+String year = null;
+String month = null;
+String day = null;
 ArrayList<ArrayList<String>> scheduleList = new ArrayList<ArrayList<String>>();
 
-
 try{
-    if(session.getAttribute("userIdx") != null){
-        userIdx = (String)session.getAttribute("userIdx");
-    }else{
+    userIdx = (String)session.getAttribute("userIdx");
+    userName = (String)session.getAttribute("userName");
+    year = request.getParameter("selectYear");
+    month = request.getParameter("selectMonth");
+    day = request.getParameter("selectDay");
+
+    if(userIdx == null){
         throw new Exception();
     }
+
+
     Class.forName("com.mysql.jdbc.Driver"); //db연결
     connect = DriverManager.getConnection("jdbc:mysql://localhost/week9","stageus","1234");
-    String sql = "SELECT date,content,execution_status FROM schedule s ";
-    sql += " JOIN user u ON user_idx = u.idx WHERE u.name = ? AND YEAR(date) = ? AND MONTH(date) = ? AND DAY(date) = ? ";
+    sql = "SELECT date,content,execution_status FROM schedule s ";
+    sql += " JOIN account a ON user_idx = a.idx WHERE a.idx = ? AND YEAR(date) = ? AND MONTH(date) = ? AND DAY(date) = ? ";
     sql += " ORDER BY date";
     query = connect.prepareStatement(sql);
-    query.setString(1,userName);
+
+    query.setString(1,userIdx);
     query.setString(2,year);
     query.setString(3,month);
     query.setString(4,day);
@@ -102,6 +108,12 @@ try{
 // [날짜,일정,수행여부]
 var scheduleList = <%=scheduleList%>
 console.log(scheduleList)
+console.log("<%=sql%>")
+console.log("<%=userIdx%>")
+console.log("<%=year%>")
+console.log("<%=month%>")
+console.log("<%=day%>")
+
 
 var modal = document.getElementById("modal")
 var modalContent = document.getElementById("modal_content")

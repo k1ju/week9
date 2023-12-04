@@ -26,15 +26,16 @@ String userName = null;
 String userPhonenumber = null;
 String userPosition = null;
 String userTeam = null;
-String member = null;
 String ownerName = null;
+String sql=null;
+String sql2=null;
 
 String year = null;
 String month = null;
 String day = null;
 
 ArrayList<ArrayList<String>> scheduleList = new ArrayList<ArrayList<String>>();
-ArrayList<String> memberList = new ArrayList<String>();
+ArrayList<ArrayList<String>> memberList = new ArrayList<ArrayList<String>>();
 
 try{
     userIdx = (String)session.getAttribute("userIdx");
@@ -61,14 +62,13 @@ try{
         day = Integer.toString(calendar.get(Calendar.DAY_OF_MONTH));
     }
 
-
     if(userIdx == null){ 
         throw new Exception();
     }
 
     Class.forName("com.mysql.jdbc.Driver"); //db연결
     connect = DriverManager.getConnection("jdbc:mysql://localhost/week9","stageus","1234");
-    String sql = "SELECT date FROM schedule s WHERE idx = ? AND YEAR(date) = ? AND MONTH(date) = ?  ";
+    sql = "SELECT date FROM schedule s WHERE user_idx = ? AND YEAR(date) = ? AND MONTH(date) = ?  ";
 
     query = connect.prepareStatement(sql);
     query.setString(1,userIdx);
@@ -84,16 +84,21 @@ try{
     }
 
     // 팀원명단 가져오기sql
-    if(userPosition == "팀장"){
+    if(userPosition.equals("팀장")){ // 문자열 비교는 equals
 
-        String sql2 = "SELECT * FROM account WHERE team = (SELECT team FROM account WHERE idx = ?)";
+        sql2 = "SELECT name,phonenumber FROM account WHERE team = (SELECT team FROM account WHERE idx = ?)";
         query2 = connect.prepareStatement(sql2);
         query2.setString(1,userIdx);
         rs2 = query2.executeQuery();
         
         while(rs2.next()){
-            member = rs2.getString("name");
-            memberList.add("\"" + member + "\"");
+            ArrayList<String> member = new ArrayList<String>();
+            String name = rs2.getString(1);
+            String phonenumber = rs2.getString(2);
+
+            member.add("\"" + name + "\"");
+            member.add("\"" + phonenumber + "\"");
+            memberList.add(member);
         }
     }
 
@@ -174,8 +179,10 @@ try{
             <Img class="icon_arrow" onclick="afterYearEvent()" src="../image/arrow_right_icon.png">
         </div>
         <div id="month_btn_box">
+            <!-- 월버튼추가 -->
         </div>
         <table id="calender">
+            <!-- 달력추가 -->
         </table>
     </main>
 
@@ -202,7 +209,10 @@ console.log(selectYear)
 console.log(selectMonth)
 console.log(<%=scheduleList%>)
 console.log("<%=userIdx%>")
-console.log("<%=memberList%>")
+console.log("<%=userPosition%>")
+console.log("<%=sql2%>")
+
+console.log(<%=memberList%>)
 
 //현재날짜 표시  
 document.getElementById("current_date").innerHTML = date.getFullYear() + "-" +  (date.getMonth() + 1) + "-" + date.getDate();
@@ -262,12 +272,13 @@ function moveToDestEvent(e){
 function makeCalenderName(ownerName,selectYear,selectMonth){
     ownerCalender.innerHTML = ownerName + "팀원의 " + selectYear + "년 " + selectMonth + "월 일정"
 }
-function teamMember(memberList){
+function teamMember(memberList){//2차원리스트, 이름,전화번호순
     for(var i=0;i<memberList.length;i++){
         var member = document.createElement("a")
-        member.innerHTML=memberList[i]
+        member.innerHTML=memberList[i][0] + " : " + memberList[i][1].substring(0,3) + "-" + memberList[i][1].substring(3,7) + "-" + memberList[i][1].substring(7,11)             
         member.classList.add("member")
-        member.href= "memberSchedule.jsp"
+        member.href= "schedule.jsp?ownerName=" + memberList[i][0] + "&ownerPhonenumber=" + memberList[i][1] 
+        //이름,전화번호 전달
         document.getElementById("team_member").appendChild(member)
     }
 }
@@ -331,8 +342,8 @@ function makeCalender(selectMonth){
 }
 // 모달열기, 함수명에 이벤트쓰기
 function getModalEvent(){
-    url= "scheduleShowAction.jsp?ownerName=" + ownerName + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
-    url+= "&selectDay=" + 
+    url= "scheduleShowAction.jsp?selectYear=" + selectYear + "&selectMonth=" + selectMonth
+    url+= "&selectDay=" + selectDay
     window.open("modal.jsp","_blank","width=700,height=400")
 }
 // 다음연도, 이전연도 버튼 이벤트
@@ -349,7 +360,6 @@ function afterYearEvent(){
 //슬라이드바 토글
 function menuBarEvent(){
     var navStyleRight = window.getComputedStyle(nav).getPropertyValue("right")
-
     if(navStyleRight == "-300px"){
         nav.style.right = "0"
     }else {
