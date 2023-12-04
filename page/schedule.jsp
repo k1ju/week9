@@ -44,9 +44,6 @@ try{
     userPosition = (String)session.getAttribute("userPosition");
     userTeam = (String)session.getAttribute("userTeam");
     ownerName = request.getParameter("ownerName");
-    if(ownerName==null){
-        ownerName = userName;
-    }
 
     year = request.getParameter("selectYear");
     month = request.getParameter("selectMonth");
@@ -68,8 +65,16 @@ try{
 
     Class.forName("com.mysql.jdbc.Driver"); //db연결
     connect = DriverManager.getConnection("jdbc:mysql://localhost/week9","stageus","1234");
-    sql = "SELECT date FROM schedule s WHERE user_idx = ? AND YEAR(date) = ? AND MONTH(date) = ?  ";
 
+    //if(ownerName == ){
+
+
+
+    //}
+
+
+
+    sql = "SELECT date FROM schedule s WHERE user_idx = ? AND YEAR(date) = ? AND MONTH(date) = ?  ";
     query = connect.prepareStatement(sql);
     query.setString(1,userIdx);
     query.setString(2,year);
