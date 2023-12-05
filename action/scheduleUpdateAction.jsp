@@ -17,6 +17,7 @@ String date = null;
 String time = null;
 String dateTime =null;
 String content = null;
+String executionStatus = null;
 String articleIdx = null;
 String writerIdx = null;
 String sql = null;
@@ -30,12 +31,14 @@ Connection connect = null;
 
 try{
     userIdx = (String)session.getAttribute("userIdx");
-    time = request.getParameter("time_value");
-    content = request.getParameter("content_value");
-    date = request.getParameter("date_value");
-    dateTime = date + " " + time;
-    articleIdx = request.getParameter("article_idx_value");
     writerIdx = request.getParameter("writer_idx_value");
+    articleIdx = request.getParameter("article_idx_value");
+    date = request.getParameter("date_value");
+    time = request.getParameter("time_value");
+    dateTime = date + " " + time;
+    content = request.getParameter("content_value");
+    executionStatus = "0";
+
     if(userIdx == null){
         throw new Exception();
     }
@@ -44,11 +47,11 @@ try{
     connect = DriverManager.getConnection("jdbc:mysql://localhost/week9","stageus","1234");
     sql = "UPDATE schedule SET date = ?, content = ?, execution_status = ? WHERE idx = ? AND user_idx = ?  ";
     query = connect.prepareStatement(sql);
-    query.setString(1,myList.get(0));
+    query.setString(1,dateTime);
     //날짜 형식에 맞게 잘 입력하기
-    query.setString(2,myList.get(1));
-    query.setString(3,myList.get(2));
-    query.setString(4,myList.get(3));
+    query.setString(2,content);
+    query.setString(3,executionStatus);
+    query.setString(4,articleIdx);
     query.setString(5,userIdx);
 
     query.executeUpdate();
@@ -75,15 +78,19 @@ try{
     
 <script>
 
-    console.log("<%=userIdx%>")
+    console.log("유저의 idx","<%=userIdx%>")
+    console.log("글쓴이의 idx","<%=writerIdx%>")
+    console.log("일정의 idx","<%=articleIdx%>")
+    console.log("날짜","<%=date%>")
+    console.log("시간","<%=time%>")
+
     console.log("<%=dateTime%>" )
-    console.log("<%=content%>")
-    console.log("<%=articleIdx%>")
-    console.log("<%=writerIdx%>")
+    console.log("내용:","<%=content%>")
+
 
     console.log("<%=sql%>")
 
-    //location.href = document.referrer // 이전페이지의 url*
+    location.href = document.referrer // 이전페이지의 url*
 
 </script>
 </body>

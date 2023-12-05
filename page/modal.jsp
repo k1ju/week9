@@ -133,6 +133,10 @@ makeArticle(scheduleList)
 function makeArticle(list){
     var modal = document.getElementById("modal")
     var modalContent = document.getElementById("modal_content")
+    var year = <%=year%>
+    var month = <%=month%>
+    var  day = <%=day%>
+
 
     for(var i=0;i< list.length;i++){
         var article = document.createElement("article") // 변수를 let으로 선언하여 블럭안에서 변수값유지
@@ -145,6 +149,7 @@ function makeArticle(list){
         var confirmBtn = document.createElement("input")
         var updateBtn = document.createElement("button")
         var deleteBtn = document.createElement("button")
+        var date = document.createElement("input")
         var articleIdx = document.createElement("input")
         var writerIdx = document.createElement("input")
 
@@ -188,11 +193,16 @@ function makeArticle(list){
         timeUpdate.id = "time_update_"+i
         timeUpdate.classList.add("article_timeUpdate")
         timeUpdate.classList.add("article_update")
+        timeUpdate.value = list[i][0]
+        timeUpdate.name = "time_value"
 
         todoUpdate.type="text"
         todoUpdate.id = "todo_update_"+i
         todoUpdate.classList.add("article_todoUpdate")
         todoUpdate.classList.add("article_update")
+        todoUpdate.value = list[i][1]
+        todoUpdate.name = "content_value"
+
 
         confirmBtn.value="확인"
         confirmBtn.type="submit"
@@ -210,10 +220,10 @@ function makeArticle(list){
         writerIdx.value = list[i][4]
         writerIdx.name = "writer_idx_value"
 
-        // checkbox.style.display = "none"
-        // timeUpdate.style.display="none"
-        // todoUpdate.style.display="none"
-        // confirmBtn.style.display="none"
+        date.type = "hidden"
+        date.value = year + "-" + month + "-" + day
+        date.name = "date_value"
+        console.log("데이트의 값",date.value)
 
         article.appendChild(form)
         form.appendChild(checkbox)
@@ -226,6 +236,7 @@ function makeArticle(list){
         form.appendChild(deleteBtn)
         form.appendChild(articleIdx)
         form.appendChild(writerIdx)
+        form.appendChild(date)
         modalContent.appendChild(article)
         // 수정전환 이벤트
         // TODO: 이런 문법은 존재하지 않음 ( 문제 발생해도 해결 못함 ) -> 아예 이벤트 함수 쓰듯이 작성하고, 매개변수로 처리할 것
@@ -259,7 +270,10 @@ function updateModeEvent(e){
 function updateEvent(e){
     var id = e.target.id
     var index = id.split("_")[2]
-    form.action = "../action/scheduleUpdateAction.jsp"
+    var form = document.getElementById("form_"+index)
+    var date = '<%=year + "-" + month + "-" + day%>'
+    console.log(date)
+    form.action = "../action/scheduleUpdateAction.jsp?date=" + date
 
     document.getElementById("checkbox_"+index).classList.add("article_update")
     document.getElementById("time_update_"+index).classList.add("article_update")
@@ -301,6 +315,7 @@ function scheduleInsertEvent(){
         alert("값을 입력해주세요")
         return false
     }
+
     document.getElementsByName("date_value")[0].value = '<%=year%>'+"-"+"<%=month%>"+"-"+"<%=day%>"
 
     console.log(document.getElementsByName("date_value")[0].value)

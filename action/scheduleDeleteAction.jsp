@@ -17,7 +17,6 @@ String articleIdx = null;
 String sql = null;
 
 
-
 PreparedStatement query = null;
 Connection connect = null;
 
