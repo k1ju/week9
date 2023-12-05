@@ -10,14 +10,21 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Calendar" %>
 
-//unique로 검색하기
 <%
 request.setCharacterEncoding("utf-8");
 
+
+String sql=null;
 ResultSet rs = null;
 PreparedStatement query = null;
+
+String sql2=null;
 ResultSet rs2 = null;
 PreparedStatement query2 = null;
+
+String sql3=null;
+ResultSet rs3 = null;
+PreparedStatement query3 = null;
 Connection connect = null;
 
 Calendar calendar = Calendar.getInstance();
@@ -27,9 +34,8 @@ String userPhonenumber = null;
 String userPosition = null;
 String userTeam = null;
 String ownerName = null;
-String sql=null;
-String sql2=null;
-
+String ownerPhonenumber = null;
+String ownerIdx = null;
 String year = null;
 String month = null;
 String day = null;
@@ -44,6 +50,7 @@ try{
     userPosition = (String)session.getAttribute("userPosition");
     userTeam = (String)session.getAttribute("userTeam");
     ownerName = request.getParameter("ownerName");
+    ownerPhonenumber = request.getParameter("ownerPhonenumber");
 
     year = request.getParameter("selectYear");
     month = request.getParameter("selectMonth");
@@ -66,19 +73,28 @@ try{
     Class.forName("com.mysql.jdbc.Driver"); //db연결
     connect = DriverManager.getConnection("jdbc:mysql://localhost/week9","stageus","1234");
 
-    //if(ownerName == ){
+    if(ownerName == null ){ // 오너이름이 따로 없다면
+        ownerName= userName;
+        ownerPhonenumber = userPhonenumber;
+        ownerIdx = userIdx;
+    }else{ // 오너이름있을때, 다른 사람스케쥴 볼때
+        sql3 = "SELECT idx FROM account WHERE name = ? AND phonenumber = ?";
+        query3 =  connect.prepareStatement(sql3);
+        query3.setString(1,ownerName);
+        query3.setString(2,ownerPhonenumber);
+        rs3 = query3.executeQuery();
+        rs3.next();
+        ownerIdx = rs3.getString(1);
+    }
 
-
-
-    //}
-
-
-
-    sql = "SELECT date FROM schedule s WHERE user_idx = ? AND YEAR(date) = ? AND MONTH(date) = ?  ";
+    sql = "SELECT date FROM schedule WHERE user_idx = ? AND YEAR(date) = ? AND MONTH(date) = ?  ";
     query = connect.prepareStatement(sql);
-    query.setString(1,userIdx);
+
+    query.setString(1,ownerIdx);
     query.setString(2,year);
     query.setString(3,month);
+
+
     rs = query.executeQuery();
     
     while(rs.next()){
@@ -194,30 +210,25 @@ try{
 </body>
 <script>
 //전역 코드 모아놓기
-var scheduleList=<%=scheduleList%> 
 var date = new Date()
 var selectYear = <%=year%>
 var selectMonth = <%=month%>
 var selectDay = <%=day%>
-var ownerName = "<%=userName%>"
+var ownerName = "<%=ownerName%>"
+var ownerPhonenumber = "<%=ownerPhonenumber%>" 
 var memberList = <%=memberList%>
+var scheduleList = <%=scheduleList%>
 
-var nav = document.getElementById("navigation")
-var menuBtn = document.getElementById("icon_menu")
-var arrowLeft = document.getElementById("arrow_left_btn")
-var arrowRight = document.getElementById("arrow_right_btn")
+console.log("멤버리스트:",memberList)
+console.log("유저idx",<%=userIdx%>)
+console.log("ownerName","<%=ownerName%>")
+console.log("ownerPhonenumber","<%=ownerPhonenumber%>")
+console.log("ownerIdx",<%=ownerIdx%>)
+
 var ownerCalender = document.getElementById("owner_calender")
 var calender = document.getElementById("calender")
 var dayBtnList = document.getElementsByClassName("dayBtn")
 
-console.log(selectYear)
-console.log(selectMonth)
-console.log(<%=scheduleList%>)
-console.log("<%=userIdx%>")
-console.log("<%=userPosition%>")
-console.log("<%=sql2%>")
-
-console.log(<%=memberList%>)
 
 //현재날짜 표시  
 document.getElementById("current_date").innerHTML = date.getFullYear() + "-" +  (date.getMonth() + 1) + "-" + date.getDate();
@@ -260,8 +271,7 @@ for(var i=0;i<12;i++){
 
         makeCalenderName(ownerName,selectYear,selectMonth)
         makeCalender(selectMonth)
-    //리더페이지에서 코드 옮겨오고, 스케쥴 페이지 하나로 통합
-        let url = "schedule.jsp?ownerName=" + ownerName + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
+        let url = "schedule.jsp?ownerName=" + ownerName + "&ownerPhonenumber=" + ownerPhonenumber + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
         window.open(url,"_self")
     })
 }
@@ -290,8 +300,7 @@ function teamMember(memberList){//2차원리스트, 이름,전화번호순
 //날짜 생성함수
 function makeCalender(selectMonth){
     scheduleList=<%=scheduleList%> //날짜, 일정,수행여부 순서
-    console.log("현재월의 스케쥴리스트는 "+scheduleList)
-    console.log("달력생성, 현재 월은" + selectMonth + "월")
+    console.log("스케쥴리스트:",scheduleList)
     var maxDay = 0
     if (selectMonth ==2){
         maxDay=28
@@ -338,7 +347,7 @@ function makeCalender(selectMonth){
             //반복문으로 만든 여러개의 개체에 동시에 이벤트부여하는 것은 addevent가 더 낫다
             dayBtn.addEventListener('click',function(){
                 var dayNum = parseInt(j+1) + parseInt(i*7)
-                url= "modal.jsp?ownerName=" + ownerName + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
+                url= "modal.jsp?ownerName=" + ownerName + "&ownerPhonenumber=" + ownerPhonenumber + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
                 url+= "&selectDay=" + dayNum
                 window.open(url,"_blank","width=700,height=400") // 모달 새창으로 열기
             })
@@ -346,24 +355,25 @@ function makeCalender(selectMonth){
     }
 }
 // 모달열기, 함수명에 이벤트쓰기
-function getModalEvent(){
-    url= "scheduleShowAction.jsp?selectYear=" + selectYear + "&selectMonth=" + selectMonth
-    url+= "&selectDay=" + selectDay
-    window.open("modal.jsp","_blank","width=700,height=400")
-}
+// function getModalEvent(){
+//     url= "scheduleShowAction.jsp?selectYear=" + selectYear + "&selectMonth=" + selectMonth
+//     url+= "&selectDay=" + selectDay
+//     window.open("modal.jsp","_blank","width=700,height=400")
+// }
 // 다음연도, 이전연도 버튼 이벤트
 function beforeYearEvent(){
     selectYear -= 1
-    url = "leaderSchedule.jsp?ownerName=" + ownerName + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
+    url = "schedule.jsp?ownerName=" + ownerName + "&ownerPhonenumber=" + ownerPhonenumber + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
     window.open(url,"_self")
 }
 function afterYearEvent(){
     selectYear += 1
-    url = "leaderSchedule.jsp?ownerName=" + ownerName + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
+    url = "schedule.jsp?ownerName=" + ownerName + "&ownerPhonenumber=" + ownerPhonenumber + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
     window.open(url,"_self")
 }
 //슬라이드바 토글
 function menuBarEvent(){
+    var nav = document.getElementById("navigation")
     var navStyleRight = window.getComputedStyle(nav).getPropertyValue("right")
     if(navStyleRight == "-300px"){
         nav.style.right = "0"

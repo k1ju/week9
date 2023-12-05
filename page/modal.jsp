@@ -13,10 +13,16 @@
 
 ResultSet rs = null;
 PreparedStatement query = null;
+ResultSet rs2 = null;
+PreparedStatement query2 = null;
 Connection connect = null;
 String sql = null;
+String sql2 = null;
 String userIdx = null;
 String userName = null;
+String ownerIdx = null;
+String ownerName = null;
+String ownerPhonenumber = null;
 String year = null;
 String month = null;
 String day = null;
@@ -25,6 +31,8 @@ ArrayList<ArrayList<String>> scheduleList = new ArrayList<ArrayList<String>>();
 try{
     userIdx = (String)session.getAttribute("userIdx");
     userName = (String)session.getAttribute("userName");
+    ownerName = request.getParameter("ownerName");
+    ownerPhonenumber = request.getParameter("ownerPhonenumber");
     year = request.getParameter("selectYear");
     month = request.getParameter("selectMonth");
     day = request.getParameter("selectDay");
@@ -35,12 +43,27 @@ try{
 
     Class.forName("com.mysql.jdbc.Driver"); //db연결
     connect = DriverManager.getConnection("jdbc:mysql://localhost/week9","stageus","1234");
+
+    if(ownerName != null){
+        sql2 = "SELECT idx FROM account WHERE name = ? AND phonenumber = ?";
+        query2 = connect.prepareStatement(sql2);
+
+        query2.setString(1,ownerName);
+        query2.setString(2,ownerPhonenumber);
+        rs2 = query2.executeQuery();
+        rs2.next();
+        ownerIdx = rs2.getString(1);
+    }else{
+        ownerIdx = userIdx;
+    }
+
+    
     sql = "SELECT date,content,execution_status,s.idx,s.user_idx FROM schedule s ";
     sql += " JOIN account a ON user_idx = a.idx WHERE a.idx = ? AND YEAR(date) = ? AND MONTH(date) = ? AND DAY(date) = ? ";
     sql += " ORDER BY date";
     query = connect.prepareStatement(sql);
 
-    query.setString(1,userIdx);
+    query.setString(1,ownerIdx);
     query.setString(2,year);
     query.setString(3,month);
     query.setString(4,day);
@@ -116,13 +139,11 @@ try{
 // [날짜,일정,수행여부]
 var scheduleList = <%=scheduleList%>
 console.log(scheduleList)
-console.log("<%=sql%>")
-console.log("<%=userIdx%>")
-console.log("<%=year%>")
-console.log("<%=month%>")
-console.log("<%=day%>")
-console.log("<%=year%>" + "-" + "<%=month%>" + "-" +"<%=day%>")
-
+console.log("userIdx","<%=userIdx%>")
+console.log("ownerIdx","<%=ownerIdx%>")
+console.log("ownerName","<%=ownerName%>")
+console.log("ownerPhonenumber","<%=ownerPhonenumber%>")
+console.log("sql2","<%=sql2%>")
 
 
 // 리스트준비해서 받아오기
