@@ -5,7 +5,6 @@
 <%@ page import="java.sql.Connection" %>
 <!-- sql전송 라이브러리 -->
 <%@ page import="java.sql.PreparedStatement" %>
-<!-- 데이터받아오기 라이브러리 -->
 
 <%
 request.setCharacterEncoding("utf-8");
@@ -20,7 +19,6 @@ String content = null;
 String sql = null;
 
 PreparedStatement query = null;
-PreparedStatement selectQuery = null;
 Connection connect = null;
 
 try{

@@ -8,12 +8,13 @@
 <!-- 데이터받아오기 라이브러리 -->
 <%@ page import="java.sql.ResultSet" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="java.sql.SQLException" %>;
 <%
 
 ResultSet rs = null;
 PreparedStatement query = null;
 Connection connect = null;
-String sql=null;
+String sql = null;
 String userIdx = null;
 String userName = null;
 String year = null;
@@ -34,7 +35,7 @@ try{
 
     Class.forName("com.mysql.jdbc.Driver"); //db연결
     connect = DriverManager.getConnection("jdbc:mysql://localhost/week9","stageus","1234");
-    sql = "SELECT date,content,execution_status FROM schedule s ";
+    sql = "SELECT date,content,execution_status,s.idx,s.user_idx FROM schedule s ";
     sql += " JOIN account a ON user_idx = a.idx WHERE a.idx = ? AND YEAR(date) = ? AND MONTH(date) = ? AND DAY(date) = ? ";
     sql += " ORDER BY date";
     query = connect.prepareStatement(sql);
@@ -50,13 +51,20 @@ try{
         String date = rs.getString(1).substring(11,16);
         String content = rs.getString(2); 
         String executionStatus = rs.getString(3);
+        String articleIdx = rs.getString(4);
+        String writerIdx = rs.getString(5);
+
         schedule.add("\"" + date + "\"");
         schedule.add("\"" + content + "\"");
         schedule.add("\"" + executionStatus + "\"");
+        schedule.add("\"" + articleIdx + "\"");
+        schedule.add("\"" + writerIdx + "\"");
+
         scheduleList.add(schedule);
     }
 
 }catch(Exception e){
+    e.printStackTrace();
     //response.sendRedirect("index.jsp");
 }finally{
     if (rs != null) {
@@ -97,7 +105,8 @@ try{
             <input id = "input_plan" type="text" name="content_value">
             <!-- <button id="btn_insert">확인 -->
             <input type="submit" id="btn_insert" value="확인">
-            <input type="hidden"  name="date_value">
+            <input type="hidden" name="date_value">
+
         </form>
     </section>
 
@@ -115,15 +124,6 @@ console.log("<%=day%>")
 console.log("<%=year%>" + "-" + "<%=month%>" + "-" +"<%=day%>")
 
 
-var modal = document.getElementById("modal")
-var modalContent = document.getElementById("modal_content")
-var scheduleStatusList = document.getElementsByClassName("schedule_status")
-var schedulePlanList = document.getElementsByClassName("schedule_plan")
-var modalDeleteBtnList = document.getElementsByClassName("modal__btn_delete")
-var modalUpdateBtnList = document.getElementsByClassName("modal__btn_update")
-var modalConfirmBtnList = document.getElementsByClassName("modal__btn_confirm")
-var schedulePlanUpdate = document.getElementById("schedule_plan_update")
-var scheduleTimeUpdate = document.getElementById("schedule_time_update")
 
 // 리스트준비해서 받아오기
 //모달내 일정생성하기
@@ -131,83 +131,84 @@ var scheduleTimeUpdate = document.getElementById("schedule_time_update")
 makeArticle(scheduleList)
 
 function makeArticle(list){
+    var modal = document.getElementById("modal")
+    var modalContent = document.getElementById("modal_content")
 
     for(var i=0;i< list.length;i++){
-        let article = document.createElement("article") // 변수를 let으로 선언하여 블럭안에서 변수값유지
-        let form = document.createElement("div")
-        let checkbox = document.createElement("input")
-        let time = document.createElement("div")
-        let todo = document.createElement("div")
-        let timeUpdate = document.createElement("input")
-        let todoUpdate = document.createElement("input")
-        
-        let confirmBtn = document.createElement("input")
-        let updateBtn = document.createElement("button")
-        let deleteBtn = document.createElement("button")
+        var article = document.createElement("article") // 변수를 let으로 선언하여 블럭안에서 변수값유지
+        var form = document.createElement("form")
+        var checkbox = document.createElement("input")
+        var time = document.createElement("div")
+        var todo = document.createElement("div")
+        var timeUpdate = document.createElement("input")
+        var todoUpdate = document.createElement("input")
+        var confirmBtn = document.createElement("input")
+        var updateBtn = document.createElement("button")
+        var deleteBtn = document.createElement("button")
+        var articleIdx = document.createElement("input")
+        var writerIdx = document.createElement("input")
 
-        form.action = "scheduleUpdateAction.jsp"
+        // form.action = "scheduleUpdateAction.jsp"
         form.classList.add("article_form")
+        form.id = "form_"+i
         
         checkbox.type="checkbox"
-        checkbox.id= "checkbox" + i
+        checkbox.id= "checkbox_" + i
         checkbox.classList.add("article_checkbox")
         checkbox.classList.add("article_update")
 
         time.innerHTML=list[i][0] // 일정시간
-        time.id = "time" + i
+        time.id = "time_" + i
         time.classList.add("article_normal")
 
         todo.innerHTML=list[i][1]
-        todo.id="todo" + i
+        todo.id="todo_" + i
         todo.classList.add("article_normal")
 
         updateBtn.innerHTML="수정"
-        updateBtn.id = "update_btn"+i
+        updateBtn.id = "update_btn_"+i
         updateBtn.type = "button" // 타입을 button으로 하여, 폼태그전송 막기
         updateBtn.classList.add("article_btn")
         updateBtn.classList.add("article_normal")
-        // updateBtn.onclick = updateModeEvent(i)
 
-        // 위와 같은 형태인데, 이벤트함수에 매개변수를 주고 싶을 때 사용할 수 있는 방법 ( 익명 함수 )
-        updateBtn.onclick = (function(event) {
-            console.log("클릭")
-            updateModeEvent(i)
-            event.stopPropagation()
-        })
+
+        // 안되는 이유 : 이벤트 등록을 html이 아닌 js에서 할경우, 이벤트 등록을 해주는 함수가 "비동기 함수"
+        // 비동기 함수의 의미는, 오래걸리는 작업을 나중에 처리하도록 하는 함수
+        // 코드 블럭 ( 중괄호 내용 ) 이 끝난 다음에 처리가 됨
+        updateBtn.onclick = updateModeEvent
+
         deleteBtn.innerHTML="삭제"
-        deleteBtn.id = "delete_btn"+i
+        deleteBtn.id = "delete_btn_"+i
         deleteBtn.type = "button" // 타입을 button으로 하여, 폼태그전송 막기
         deleteBtn.classList.add("article_btn")
         deleteBtn.classList.add("article_normal")
-        deleteBtn.onclick = (function(index) {
-            return function(){
-                console.log("클릭")
-                scheduleDeleteEvent(index)
-            }
-        })(i);
+        deleteBtn.onclick = scheduleDeleteEvent
 
         timeUpdate.type="time"
-        timeUpdate.id = "time_update"+i
+        timeUpdate.id = "time_update_"+i
         timeUpdate.classList.add("article_timeUpdate")
         timeUpdate.classList.add("article_update")
 
         todoUpdate.type="text"
-        todoUpdate.id = "todo_update"+i
+        todoUpdate.id = "todo_update_"+i
         todoUpdate.classList.add("article_todoUpdate")
         todoUpdate.classList.add("article_update")
 
         confirmBtn.value="확인"
         confirmBtn.type="submit"
-        confirmBtn.id="confirm_btn"+i
+        confirmBtn.id="confirm_btn_"+i
         confirmBtn.classList.add("article_btn")
         confirmBtn.classList.add("article_update")
 
-        confirmBtn.onclick = (function(index) {
-            return function(){
-                console.log("클릭")
-                updateModeEvent(index);
-            };
-        })(i);
+        confirmBtn.onclick = updateEvent
+
+        articleIdx.type = "hidden"
+        articleIdx.value = list[i][3]
+        articleIdx.name = "article_idx_value"
+
+        writerIdx.type = "hidden"
+        writerIdx.value = list[i][4]
+        writerIdx.name = "writer_idx_value"
 
         // checkbox.style.display = "none"
         // timeUpdate.style.display="none"
@@ -223,9 +224,9 @@ function makeArticle(list){
         form.appendChild(confirmBtn)
         form.appendChild(updateBtn)
         form.appendChild(deleteBtn)
-
+        form.appendChild(articleIdx)
+        form.appendChild(writerIdx)
         modalContent.appendChild(article)
-
         // 수정전환 이벤트
         // TODO: 이런 문법은 존재하지 않음 ( 문제 발생해도 해결 못함 ) -> 아예 이벤트 함수 쓰듯이 작성하고, 매개변수로 처리할 것
 
@@ -238,50 +239,57 @@ function makeArticle(list){
 //onclick으로 매개변수를 이용하여 함수로 접근하려면 클로저 개념필요함 클로저 공부해서 적용하기
 
 //수정모드 이벤트
-function updateModeEvent(i){
-    console.log(document.getElementById("checkbox"+i))
-    document.getElementById("checkbox"+i).classList.remove("article_update")
-    document.getElementById("time_update"+i).classList.remove("article_update")
-    document.getElementById("todo_update"+i).classList.remove("article_update")
-    document.getElementById("confirm_btn"+i).classList.remove("article_update")
+function updateModeEvent(e){
+    var id = e.target.id
+    var index = id.split("_")[2]
+    console.log(index)
 
-    document.getElementById("time"+i).classList.add("article_update")
-    document.getElementById("todo"+i).classList.add("article_update")
-    document.getElementById("update_btn"+i).classList.add("article_update")
-    document.getElementById("delete_btn"+i).classList.add("article_update")
+    document.getElementById("checkbox_"+index).classList.remove("article_update")
+    document.getElementById("time_update_"+index).classList.remove("article_update")
+    document.getElementById("todo_update_"+index).classList.remove("article_update")
+    document.getElementById("confirm_btn_"+index).classList.remove("article_update")
+
+    document.getElementById("time_"+index).classList.add("article_update")
+    document.getElementById("todo_"+index).classList.add("article_update")
+    document.getElementById("update_btn_"+index).classList.add("article_update")
+    document.getElementById("delete_btn_"+index).classList.add("article_update")
 }
 //수정확인버튼 이벤트
 // confirmBtn.addEventListener('click',function(){
-function updateEvent(i){
-    console.log("클릭")
-    document.getElementById("checkbox"+i).classList.add("article_update")
-    document.getElementById("time_update"+i).classList.add("article_update")
-    document.getElementById("todo_update"+i).classList.add("article_update")
-    document.getElementById("confirm_btn"+i).classList.add("article_update")
+function updateEvent(e){
+    var id = e.target.id
+    var index = id.split("_")[2]
+    form.action = "../action/scheduleUpdateAction.jsp"
 
-    document.getElementById("time"+i).classList.remove("article_update")
-    document.getElementById("todo"+i).classList.remove("article_update")
-    document.getElementById("update_btn"+i).classList.remove("article_update")
-    document.getElementById("delete_btn"+i).classList.remove("article_update")
+    document.getElementById("checkbox_"+index).classList.add("article_update")
+    document.getElementById("time_update_"+index).classList.add("article_update")
+    document.getElementById("todo_update_"+index).classList.add("article_update")
+    document.getElementById("confirm_btn_"+index).classList.add("article_update")
 
-    if(!document.getElementById("time_update"+i).value || !document.getElementById("todo_update"+i).value ){
+    document.getElementById("time_"+index).classList.remove("article_update")
+    document.getElementById("todo_"+index).classList.remove("article_update")
+    document.getElementById("update_btn_"+index).classList.remove("article_update")
+    document.getElementById("delete_btn_"+index).classList.remove("article_update")
+
+    if(!document.getElementById("time_update_"+index).value || !document.getElementById("todo_update_"+index).value ){
         alert("값을 입력해주세요")
+        return false
     }else{
-        var url = "scheduleUpdateAction.jsp?"
-        window.open(url,"_self")
-
-    location.href = "scheduleUpdateAction.jsp"
-
+        form.submit()
     }
 }
 //삭제버튼 이벤트
-function scheduleDeleteEvent(i){
+function scheduleDeleteEvent(e){
+    var id= e.target.id
+    var index = id.split("_")[2]
+    var form = document.getElementById("form_"+index)
+    form.action = "../action/scheduleDeleteAction.jsp"
+    console.log(form)
     
     if (confirm('일정을 삭제하시겠습니까?') == true){
-        alert("삭제되었습니다")
-        // location.href = "scheduleDeleteAction.jsp"
+        form.submit()
     }else{
-        return
+        return false
     }
 }
 //일정 입력 이벤트
