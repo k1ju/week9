@@ -12,7 +12,7 @@
 request.setCharacterEncoding("utf-8");
 
 String userIdx = null;
-String writerIdx = null;
+String ownerIdx = null;
 String articleIdx = null;
 String sql = null;
 
@@ -22,13 +22,13 @@ Connection connect = null;
 
 try{
     userIdx = (String)session.getAttribute("userIdx");
-    writerIdx = request.getParameter("writer_idx_value");
+    ownerIdx = request.getParameter("owner_idx_value");
     articleIdx = request.getParameter("article_idx_value");
     if(userIdx == null){
         throw new Exception();
     }
 
-    if(userIdx.equals(writerIdx)){
+    if(userIdx.equals(ownerIdx)){
         Class.forName("com.mysql.jdbc.Driver"); //db연결
         connect = DriverManager.getConnection("jdbc:mysql://localhost/week9","stageus","1234");
         sql = "DELETE FROM schedule WHERE user_idx = ? AND idx = ? ";
@@ -62,7 +62,7 @@ try{
 <script>
 
     console.log("유저의 idx","<%=userIdx%>")
-    console.log("글쓴이의 idx","<%=writerIdx%>")
+    console.log("글쓴이의 idx","<%=ownerIdx%>")
     console.log("일정의 idx","<%=articleIdx%>")
     console.log("<%=sql%>")
 

@@ -11,6 +11,7 @@ request.setCharacterEncoding("utf-8");
 
 
 String userIdx = null;
+String ownerIdx = null; 
 String date = null;
 String time = null;
 String dateTime =null;
@@ -23,27 +24,29 @@ Connection connect = null;
 
 try{
     userIdx = (String)session.getAttribute("userIdx");
-    time = request.getParameter("time_value");
-    content = request.getParameter("content_value");
-    date = request.getParameter("date_value");
+    ownerIdx = request.getParameter("new_owner_idx_value");
+    time = request.getParameter("new_time_value");
+    content = request.getParameter("new_content_value");
+    date = request.getParameter("new_date_value");
     dateTime = date + " " + time;
 
     if(userIdx == null){
         throw new Exception();
     }
 
-    Class.forName("com.mysql.jdbc.Driver"); //db연결
-    connect = DriverManager.getConnection("jdbc:mysql://localhost/week9","stageus","1234");
-    sql = "INSERT INTO schedule(date,content,user_idx) VALUES(?,?,?) ";
-    query = connect.prepareStatement(sql);
-    query.setString(1,dateTime);
-    query.setString(2,content);
-    query.setString(3,userIdx);
-    query.executeUpdate();
-
+    if(userIdx.equals(ownerIdx)){
+        Class.forName("com.mysql.jdbc.Driver"); //db연결
+        connect = DriverManager.getConnection("jdbc:mysql://localhost/week9","stageus","1234");
+        sql = "INSERT INTO schedule(date,content,user_idx) VALUES(?,?,?) ";
+        query = connect.prepareStatement(sql);
+        query.setString(1,dateTime);
+        query.setString(2,content);
+        query.setString(3,userIdx);
+        query.executeUpdate();
+    }
     
 }catch(Exception e){ // 세션없으면 로그인페이지로 이동
-    response.sendRedirect("../page/index.jsp");
+    //response.sendRedirect("../page/index.jsp");
 }finally{
 
     if (query != null) {
@@ -65,9 +68,10 @@ try{
 <script>
 
     console.log("<%=userIdx%>")
+    console.log("<%=ownerIdx%>")
+
     console.log("<%=dateTime%>" )
     console.log("<%=content%>")
-
     console.log("<%=sql%>")
 
     location.href = document.referrer // 이전페이지의 url*

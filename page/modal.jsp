@@ -75,13 +75,13 @@ try{
         String content = rs.getString(2); 
         String executionStatus = rs.getString(3);
         String articleIdx = rs.getString(4);
-        String writerIdx = rs.getString(5);
+               ownerIdx = rs.getString(5);
 
         schedule.add("\"" + date + "\"");
         schedule.add("\"" + content + "\"");
         schedule.add("\"" + executionStatus + "\"");
         schedule.add("\"" + articleIdx + "\"");
-        schedule.add("\"" + writerIdx + "\"");
+        schedule.add("\"" + ownerIdx + "\"");
 
         scheduleList.add(schedule);
     }
@@ -123,13 +123,13 @@ try{
             <!-- 일정추가 -->
         </div>
         <form id="insert_plan" action="../action/scheduleInsertAction.jsp" onsubmit="return scheduleInsertEvent() ">
-            <input id="plan_time" type="time" name="time_value">
+            <input id="plan_time" type="time" name="new_time_value">
             <!-- 시간 다이얼식으로 변경 -->
-            <input id = "input_plan" type="text" name="content_value">
+            <input id = "input_plan" type="text" name="new_content_value">
             <!-- <button id="btn_insert">확인 -->
             <input type="submit" id="btn_insert" value="확인">
-            <input type="hidden" name="date_value">
-
+            <input type="hidden" name="new_date_value">
+            <input type="hidden" name="new_owner_idx_value">
         </form>
     </section>
 
@@ -172,7 +172,7 @@ function makeArticle(list){
         var deleteBtn = document.createElement("button")
         var date = document.createElement("input")
         var articleIdx = document.createElement("input")
-        var writerIdx = document.createElement("input")
+        var ownerIdx = document.createElement("input")
 
         // form.action = "scheduleUpdateAction.jsp"
         form.classList.add("article_form")
@@ -237,13 +237,13 @@ function makeArticle(list){
         articleIdx.value = list[i][3]
         articleIdx.name = "article_idx_value"
 
-        writerIdx.type = "hidden"
-        writerIdx.value = list[i][4]
-        writerIdx.name = "writer_idx_value"
+        ownerIdx.type = "hidden"
+        ownerIdx.value = list[i][4]
+        ownerIdx.name = "owner_idx_value"
 
         date.type = "hidden"
         date.value = year + "-" + month + "-" + day
-        date.name = "date_value"
+        date.name = "article_date_value"
         console.log("데이트의 값",date.value)
 
         article.appendChild(form)
@@ -256,7 +256,7 @@ function makeArticle(list){
         form.appendChild(updateBtn)
         form.appendChild(deleteBtn)
         form.appendChild(articleIdx)
-        form.appendChild(writerIdx)
+        form.appendChild(ownerIdx)
         form.appendChild(date)
         modalContent.appendChild(article)
         // 수정전환 이벤트
@@ -264,11 +264,10 @@ function makeArticle(list){
 
     }
 }
-
-
 //모든 버튼 모달안에서 생성시 이벤트넣어주기
 //onclick으로 바꿔서 쓰기. addevent X
-//onclick으로 매개변수를 이용하여 함수로 접근하려면 클로저 개념필요함 클로저 공부해서 적용하기
+//onclick으로 작성시 : e.target.id로 숫자 받아와서 id+index
+//addevent작성시 : 변수명 받아와서 이벤트 걸어주기
 
 //수정모드 이벤트
 function updateModeEvent(e){
@@ -287,7 +286,6 @@ function updateModeEvent(e){
     document.getElementById("delete_btn_"+index).classList.add("article_update")
 }
 //수정확인버튼 이벤트
-// confirmBtn.addEventListener('click',function(){
 function updateEvent(e){
     var id = e.target.id
     var index = id.split("_")[2]
@@ -337,10 +335,9 @@ function scheduleInsertEvent(){
         return false
     }
 
-    document.getElementsByName("date_value")[0].value = '<%=year%>'+"-"+"<%=month%>"+"-"+"<%=day%>"
-
-    console.log(document.getElementsByName("date_value")[0].value)
-    
+    document.getElementsByName("new_date_value")[0].value = '<%=year%>'+"-"+"<%=month%>"+"-"+"<%=day%>"
+    document.getElementsByName("new_owner_idx_value")[0].value = '<%=ownerIdx%>'
+    console.log(document.getElementsByName("new_date_value")[0].value)
 }
 
 

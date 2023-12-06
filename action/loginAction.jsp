@@ -52,6 +52,7 @@ try{
         String userPosition = rs.getString(5);
 
         session.setAttribute("userIdx",userIdx);
+        session.setAttribute("ownerIdx",userIdx);
         session.setAttribute("userName",userName);
         session.setAttribute("userPhonenumber",userPhonenumber);
         session.setAttribute("userTeam",userTeam);

@@ -19,7 +19,7 @@ String dateTime =null;
 String content = null;
 String executionStatus = null;
 String articleIdx = null;
-String writerIdx = null;
+String ownerIdx = null;
 String sql = null;
 
 String[] array = {"2023-12-02 18:00", "스테이지어스 12월 마지막수업", "0", "9", "13"};
@@ -31,7 +31,7 @@ Connection connect = null;
 
 try{
     userIdx = (String)session.getAttribute("userIdx");
-    writerIdx = request.getParameter("writer_idx_value");
+    ownerIdx = request.getParameter("owner_idx_value");
     articleIdx = request.getParameter("article_idx_value");
     date = request.getParameter("date_value");
     time = request.getParameter("time_value");
@@ -79,7 +79,7 @@ try{
 <script>
 
     console.log("유저의 idx","<%=userIdx%>")
-    console.log("글쓴이의 idx","<%=writerIdx%>")
+    console.log("글쓴이의 idx","<%=ownerIdx%>")
     console.log("일정의 idx","<%=articleIdx%>")
     console.log("날짜","<%=date%>")
     console.log("시간","<%=time%>")
