@@ -11,13 +11,12 @@
     <div id="container">
     <h1 id="title">Time Tree</h1>
         <form class = "join_form" action="../action/joinAction.jsp" onsubmit="return checkEvent()">
-         
             <table>
                 <tr>
                     <th>아이디</th>
                     <!-- <form id = "idCheckForm" action="idCheckAction.jsp" onsubmit="return idCheckEvent()"> 폼안에 폼은 쓸수없음. 지워진다.-->
                         <td class="c2">
-                            <input id = "input_id"  type="text" placeholder="아이디" name="id_value" onchange="checkBtnEvent()">
+                            <input id = "input_id"  type="text" placeholder="아이디" name="id_value" onkeydown="checkBtnEvent()">
                         </td>
                         <td class="c3"> 
                             <!-- TODO: 이벤트 함수 밖으로 빼서 form태그 정상적으로 가져와지는지 출력으로 확인할 것 -->
@@ -72,40 +71,38 @@
                 <tr>
                     <th></th>
                     <td class="c2">
-                        <input id="btn_join" class="Btn" type="submit" value="회원가입">
+                        <input id="btn_join" class="Btn" type="submit" value="회원가입" onclick="checkEvent()">
                     </td>
                 </tr>
             </table>
-        
         </form>
 
     </div>
 </body>
 
 <script>
-
+//전역변수
 var idBanner = document.getElementById("id_banner")
-var checkBtn = document.getElementById("btn_check")
-var inputIDTag = document.getElementById("input_id")
 
 //이벤트 설정
-
 //회원가입 버튼
 function checkEvent(){
+    var checkBtn = document.getElementById("btn_check")
     
     //아이디 정규표현식
-    var idRegex = /^[a-zA-Z가-힣][a-zA-Z가-힣0-9]{0,19}$/g
+    var idRegex = /^[a-zA-Z가-힣][a-zA-Z가-힣0-9]{0,19}$/
     var id = document.getElementById("input_id").value
 
-    var pwRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{1,20})$/
+    var pwRegex = /^(?=.*[\w])(?=.*[0-9])(?=.*[^\w\d]).{1,20}$/
     var pw = document.getElementById("input_pw").value.trim()
     var pw_check = document.getElementById("input_pw_check").value.trim()
+    console.log(pw)
 
     var nameRegex = /^[가-힣]{2,4}$/
     var name = document.getElementById("input_name").value.trim()
 
     var phonenumberRegex = /^[0-9]{10,11}$/
-    var phonenumber = document.getElementById("input_phonenumber").value.trim().replaceAll(/[^0-9]/,"")
+    var phonenumber = document.getElementById("input_phonenumber").value.trim().replace(/[^0-9]g/,"")
 
     var teamTagList = document.getElementsByName("team_value")
     var positionTagList = document.getElementsByName("position_value")
@@ -134,10 +131,11 @@ function checkEvent(){
         return false
     }else if(!(idRegex.test(id))){
         alert("아이디 20글자이하,첫글자 문자")
-       return false
-    }else if(!(pwRegex.test(pw))){
-        alert("비밀번호 문자,숫자,특수문자 포함 20글자이하")
         return false
+    // }else if(!(pwRegex.test(pw))){
+    //     console.log(pwRegex.test(pw))
+    //     alert("비밀번호 문자,숫자,특수문자 포함 20글자이하")
+    //     return false
     }else if( !nameRegex.test(name) ){
         alert("이름 한글 2~4글자")
         return false
@@ -149,14 +147,16 @@ function checkEvent(){
 }
 
 function checkBtnEvent(){
+    let checkBtn = document.getElementById("btn_check")
+    let idBanner = document.getElementById("id_banner")
     console.log("중복버튼활성화")
     checkBtn.disabled=false
     checkBtn.style.backgroundColor="royalblue"
+    idBanner.innerHTML=""
 }
 function idCheckEvent(){
     var id = document.getElementById("input_id").value
     var idRegex = /^[a-zA-Z가-힣][a-zA-Z가-힣0-9]{0,19}$/g
-
     var url = "../action/idCheckAction.jsp?inputID=" + encodeURIComponent(id)
 
 
@@ -175,7 +175,6 @@ function idCheckEvent(){
     // 해당 팝업창에서 백엔드 통신을 통해 아이디 중복체크 진행
     // 해당 결과를 부모 페이지인 이 페이지로 받아오는 것 까지
 }
-
 
 function moveToDestEvent(e){
     console.log(e)

@@ -56,7 +56,6 @@ try{
     }else{
         ownerIdx = userIdx;
     }
-
     
     sql = "SELECT date,content,execution_status,s.idx,s.user_idx FROM schedule s ";
     sql += " JOIN account a ON user_idx = a.idx WHERE a.idx = ? AND YEAR(date) = ? AND MONTH(date) = ? AND DAY(date) = ? ";
@@ -141,10 +140,6 @@ var scheduleList = <%=scheduleList%>
 console.log(scheduleList)
 console.log("userIdx","<%=userIdx%>")
 console.log("ownerIdx","<%=ownerIdx%>")
-console.log("ownerName","<%=ownerName%>")
-console.log("ownerPhonenumber","<%=ownerPhonenumber%>")
-console.log("sql2","<%=sql2%>")
-
 
 // 리스트준비해서 받아오기
 //모달내 일정생성하기
@@ -157,7 +152,6 @@ function makeArticle(list){
     var year = <%=year%>
     var month = <%=month%>
     var  day = <%=day%>
-
 
     for(var i=0;i< list.length;i++){
         var article = document.createElement("article") // 변수를 let으로 선언하여 블럭안에서 변수값유지
@@ -197,7 +191,6 @@ function makeArticle(list){
         updateBtn.classList.add("article_btn")
         updateBtn.classList.add("article_normal")
 
-
         // 안되는 이유 : 이벤트 등록을 html이 아닌 js에서 할경우, 이벤트 등록을 해주는 함수가 "비동기 함수"
         // 비동기 함수의 의미는, 오래걸리는 작업을 나중에 처리하도록 하는 함수
         // 코드 블럭 ( 중괄호 내용 ) 이 끝난 다음에 처리가 됨
@@ -223,7 +216,6 @@ function makeArticle(list){
         todoUpdate.classList.add("article_update")
         todoUpdate.value = list[i][1]
         todoUpdate.name = "content_value"
-
 
         confirmBtn.value="확인"
         confirmBtn.type="submit"
@@ -261,7 +253,6 @@ function makeArticle(list){
         modalContent.appendChild(article)
         // 수정전환 이벤트
         // TODO: 이런 문법은 존재하지 않음 ( 문제 발생해도 해결 못함 ) -> 아예 이벤트 함수 쓰듯이 작성하고, 매개변수로 처리할 것
-
     }
 }
 //모든 버튼 모달안에서 생성시 이벤트넣어주기
@@ -329,17 +320,16 @@ function scheduleDeleteEvent(e){
 function scheduleInsertEvent(){
     var time =  document.getElementById("plan_time").value
     var content =  document.getElementById("input_plan").value
-    
     if(!time || !content){
         alert("값을 입력해주세요")
         return false
     }
-
     document.getElementsByName("new_date_value")[0].value = '<%=year%>'+"-"+"<%=month%>"+"-"+"<%=day%>"
     document.getElementsByName("new_owner_idx_value")[0].value = '<%=ownerIdx%>'
     console.log(document.getElementsByName("new_date_value")[0].value)
 }
-
-
+window.addEventListener("beforeunload",function(){
+    window.opener.location.reload()
+})
 </script>
 </body>

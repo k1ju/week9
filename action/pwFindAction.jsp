@@ -14,6 +14,7 @@ String userID = null;
 String userName = null;
 String userPhonenumber = null;
 String userPw = null;
+String sql = null;
 
 try{
     userID = request.getParameter("id_value");
@@ -36,7 +37,7 @@ try{
     String dbURL = "jdbc:mysql://localhost/week9";
     String dbID = "stageus";
     String dbPassword = "1234";
-    String sql = "SELECT pw FROM account WHERE id = ? AND name = ? AND phonenumber = ? ";
+    sql = "SELECT pw FROM account WHERE id = ? AND name = ? AND phonenumber = ? ";
     Class.forName("com.mysql.jdbc.Driver"); //db연결
     connect = DriverManager.getConnection(dbURL,dbID,dbPassword);
     query = connect.prepareStatement(sql);
@@ -74,7 +75,7 @@ try{
 <body>
     
     <script>
-        console.log("<%=userPw%>")
+
 
         if("<%=userPw%>" == "null"){
             alert("일치하는 회원정보없음")

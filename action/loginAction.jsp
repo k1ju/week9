@@ -22,7 +22,7 @@ try{
     String userIDRegex = "^[a-zA-Z가-힣][a-zA-Z가-힣0-9]{0,19}$";
 
     userPw = request.getParameter("pw_value");
-    //String userPwRegex = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{1,20})$";
+    //String userPwRegex = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{1,20}$";
 
     if(!Pattern.matches(userIDRegex,userID)){
         throw new Exception();

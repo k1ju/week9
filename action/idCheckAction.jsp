@@ -63,28 +63,27 @@ try{
 
 <script>
     var idChecked = <%=idChecked%>
+    var idBanner = window.opener.document.getElementById("id_banner")
+    var checkBtn = window.opener.document.getElementById("btn_check")
     console.log("<%=sql%>")
     console.log("<%=inputID%>")
 
     if (idChecked == true){ 
         console.log("중복아닌경우")
         console.log(idChecked)
-        window.opener.idBanner.innerHTML="사용가능한 아이디"
-        window.opener.idBanner.style.color="green"
-        window.opener.checkBtn.disabled = true
-        window.opener.checkBtn.style.backgroundColor = "gray"
+        idBanner.innerHTML="사용가능한 아이디"
+        idBanner.style.color="green"
+        checkBtn.disabled = true
+        checkBtn.style.backgroundColor = "gray"
     }else{ //중복된 아이디
         console.log("중복인 경우")
         console.log(idChecked)
-        window.opener.idChecked = idChecked
-        window.opener.idBanner.innerHTML="사용불가능한아이디"
-        window.opener.idBanner.style.color="red"
+        idChecked = idChecked
+        idBanner.innerHTML="사용불가능한아이디"
+        idBanner.style.color="red"
     }
     window.close()
-//아이디 전송은 url로
-//돌려주는것은 window.opener.checkedID = false
-// 부모창에 checkedID가 선언되어있음
-
+    
 </script>
     
 </body>
