@@ -47,8 +47,11 @@ article{
 .article_todoUpdate{
     height: 70%;
 }
-.article_update{
+.display_none{
     display: none;
+}
+.text_line_through{
+    text-decoration: line-through;
 }
 .article_btn{
     width: 7%;

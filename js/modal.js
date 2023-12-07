@@ -6,7 +6,7 @@ var month = month
 var  day = day
     
 
-console.log(scheduleList)
+console.log("스케쥴리스트",scheduleList)
 document.getElementById("today_date").innerHTML = year + "-" + month + "-" + day + "일정"
 makeArticle(scheduleList)
 
@@ -14,10 +14,6 @@ makeArticle(scheduleList)
 function makeArticle(list){
     var modal = document.getElementById("modal")
     var modalContent = document.getElementById("modal_content")
-    // var year = year
-
-
-    // console.log(year)
 
     for(var i=0;i< list.length;i++){
         var article = document.createElement("article") // 변수를 let으로 선언하여 블럭안에서 변수값유지
@@ -33,6 +29,11 @@ function makeArticle(list){
         var date = document.createElement("input")
         var articleIdx = document.createElement("input")
         var ownerIdx = document.createElement("input")
+        var executionStatus = document.createElement("input")
+
+        executionStatus.value = list[i][2]
+        executionStatus.id = "executionStatus_"+i
+        executionStatus.classList.add("display_none")
 
         form.classList.add("article_form")
         form.id = "form_"+i
@@ -40,21 +41,26 @@ function makeArticle(list){
         checkbox.type="checkbox"
         checkbox.id= "checkbox_" + i
         checkbox.classList.add("article_checkbox")
-        checkbox.classList.add("article_update")
+        checkbox.onclick = scheduleCompleteEvent
+        if(executionStatus.value == 1){
+            checkbox.checked = true;
+        }
 
         time.innerHTML=list[i][0] // 일정시간
         time.id = "time_" + i
-        time.classList.add("article_normal")
 
         todo.innerHTML=list[i][1]
         todo.id="todo_" + i
-        todo.classList.add("article_normal")
+        if(executionStatus.value == 1){
+            todo.classList.add("text_line_through");
+        }else{
+            todo.classList.remove("text_line_through");
+        }
 
         updateBtn.innerHTML="수정"
         updateBtn.id = "update_btn_"+i
         updateBtn.type = "button" // 타입을 button으로 하여, 폼태그전송 막기
         updateBtn.classList.add("article_btn")
-        updateBtn.classList.add("article_normal")
         updateBtn.onclick = updateModeEvent
 
         // 안되는 이유 : 이벤트 등록을 html이 아닌 js에서 할경우, 이벤트 등록을 해주는 함수가 "비동기 함수"
@@ -65,20 +71,19 @@ function makeArticle(list){
         deleteBtn.id = "delete_btn_"+i
         deleteBtn.type = "button" // 타입을 button으로 하여, 폼태그전송 막기
         deleteBtn.classList.add("article_btn")
-        deleteBtn.classList.add("article_normal")
         deleteBtn.onclick = scheduleDeleteEvent
 
         timeUpdate.type="time"
         timeUpdate.id = "time_update_"+i
         timeUpdate.classList.add("article_timeUpdate")
-        timeUpdate.classList.add("article_update")
+        timeUpdate.classList.add("display_none")
         timeUpdate.value = list[i][0]
         timeUpdate.name = "time_value"
 
         todoUpdate.type="text"
         todoUpdate.id = "todo_update_"+i
         todoUpdate.classList.add("article_todoUpdate")
-        todoUpdate.classList.add("article_update")
+        todoUpdate.classList.add("display_none")
         todoUpdate.value = list[i][1]
         todoUpdate.name = "content_value"
 
@@ -86,7 +91,7 @@ function makeArticle(list){
         confirmBtn.type="submit"
         confirmBtn.id="confirm_btn_"+i
         confirmBtn.classList.add("article_btn")
-        confirmBtn.classList.add("article_update")
+        confirmBtn.classList.add("display_none")
 
         confirmBtn.onclick = updateEvent
 
@@ -104,6 +109,7 @@ function makeArticle(list){
         console.log("데이트의 값",date.value)
 
         article.appendChild(form)
+        form.appendChild(executionStatus)
         form.appendChild(checkbox)
         form.appendChild(time)
         form.appendChild(timeUpdate)

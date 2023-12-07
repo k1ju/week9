@@ -124,7 +124,7 @@ try{
     }
 
 }catch(Exception e){
-    //response.sendRedirect("index.jsp");
+    response.sendRedirect("index.jsp");
 }finally{
     if (rs != null) {
         rs.close();

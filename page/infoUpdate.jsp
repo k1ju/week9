@@ -40,7 +40,7 @@ try{
 }
 
 %>
-<html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -133,8 +133,12 @@ try{
     </main>
 </body>
 
-<script type="text/javascript" src="infoUpdate.jsp"></script>
 <script>
+//본파일에 전역변수 선언해주고, js연결은 맨밑에 해주기!
+
+
+    var userTeam = "<%=userTeam%>"
+    var userPosition = "<%=userPosition%>"
 
     function moveToDestEvent(e){
         location.href=e
@@ -175,6 +179,8 @@ try{
     }
 
 </script>
+<script src="../js/infoUpdate.js"></script>
+
 </body>
 </html>
 

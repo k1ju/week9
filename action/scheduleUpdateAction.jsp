@@ -36,24 +36,32 @@ try{
     time = request.getParameter("time_value");
     dateTime = date + " " + time;
     content = request.getParameter("content_value");
-    executionStatus = 
+    executionStatus = request.getParameter("executionStatus_value");
 
     if(userIdx == null){
         throw new Exception();
     }
-
     Class.forName("com.mysql.jdbc.Driver"); //db연결
     connect = DriverManager.getConnection("jdbc:mysql://localhost/week9","stageus","1234");
-    sql = "UPDATE schedule SET date = ?, content = ?, execution_status = ? WHERE idx = ? AND user_idx = ?  ";
-    query = connect.prepareStatement(sql);
-    query.setString(1,dateTime);
-    //날짜 형식에 맞게 잘 입력하기
-    query.setString(2,content);
-    query.setString(3,executionStatus);
-    query.setString(4,articleIdx);
-    query.setString(5,userIdx);
+    if(executionStatus == null){
+        sql = "UPDATE schedule SET date = ?, content = ? WHERE idx = ? AND user_idx = ?  ";
+        query = connect.prepareStatement(sql);
+        query.setString(1,dateTime);
+        //날짜 형식에 맞게 잘 입력하기
+        query.setString(2,content);
+        query.setString(3,articleIdx);
+        query.setString(4,userIdx);
 
-    query.executeUpdate();
+        query.executeUpdate();
+    }else{
+        sql = "UPDATE schedule SET execution_status = ? WHERE idx = ? AND user_idx = ?  ";
+        query = connect.prepareStatement(sql);
+        query.setString(1,executionStatus);
+        query.setString(2,articleIdx);
+        query.setString(3,userIdx);
+
+        query.executeUpdate();
+    }
   
 }catch(Exception e){ // 세션없으면 로그인페이지로 이동
     //response.sendRedirect("../page/index.jsp");
@@ -85,6 +93,8 @@ try{
 
     console.log("<%=dateTime%>" )
     console.log("내용:","<%=content%>")
+    console.log("실행여부:","<%=executionStatus%>")
+
 
 
     console.log("<%=sql%>")

@@ -71,7 +71,7 @@
                 <tr>
                     <th></th>
                     <td class="c2">
-                        <input id="btn_join" class="Btn" type="submit" value="회원가입" onclick="checkEvent()">
+                        <input id="btn_join" class="Btn" type="submit" value="회원가입">
                     </td>
                 </tr>
             </table>
@@ -87,6 +87,7 @@
     //이벤트 설정
     //회원가입 버튼
     function checkEvent(){
+        console.log("함수실행")
         var checkBtn = document.getElementById("btn_check")
         
         //아이디 정규표현식
@@ -121,8 +122,8 @@
         }
 
         if(!id || !pw || !pw_check || !name || !phonenumber || !team || !position){ // 하나라도 널값이라면
-        alert("필수값 입력해주세요")
-        return false
+            alert("필수값 입력해주세요")
+            return false
         }else if(pw != pw_check){
             alert("비밀번호가 일치하지 않습니다")
             return false
