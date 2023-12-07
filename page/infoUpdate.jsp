@@ -40,7 +40,7 @@ try{
 }
 
 %>
-
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -133,72 +133,49 @@ try{
     </main>
 </body>
 
+<script type="text/javascript" src="infoUpdate.jsp"></script>
 <script>
 
-var nav = document.getElementById("navigation")
-var menuBtn = document.getElementById("icon_menu")
-date = new Date();
-var currentYear = date.getFullYear();
-var currentMonth = date.getMonth() + 1;
-var currentDay = date.getDate();
-
-console.log("<%=userIdx%>")
-console.log("<%=userTeam%>")
-
-var teamList = document.getElementsByName('team_value')
-var positionList = document.getElementsByName('position_value')
-for(var i=0;i<teamList.length;i++){
-    if(teamList[i].value == "<%=userTeam%>"){
-        teamList[i].checked = true
+    function moveToDestEvent(e){
+        location.href=e
     }
-}
-for(var i=0;i<positionList.length;i++){
-    if(positionList[i].value == "<%=userPosition%>"){
-        positionList[i].checked = true
-    }
-}
+    //슬라이드바 토글이벤트
+    function menuBarEvent(){
+        var nav = document.getElementById("navigation")
+        var navStyleRight = window.getComputedStyle(nav).getPropertyValue("right") //조회는 getComputedby
 
-// 날짜표시
-document.getElementById("current_date").innerHTML = currentYear + "-" +  currentMonth + "-" + currentDay
-
-function moveToDestEvent(e){
-    location.href=e
-}
-//슬라이드바 토글이벤트
-function menuBarEvent(){
-    var navStyleRight = window.getComputedStyle(nav).getPropertyValue("right") //조회는 getComputedby
-
-    if(navStyleRight == "-300px"){
-        nav.style.right = "0"
-    }else {
-        nav.style.right="-300px"
-    }
-}
-function formEvent(){
-    var userName = document.getElementById("input_name").value
-    var userPhonenumber = document.getElementById("input_phonenumber").value
-    var userTeam = null
-    var userPosition = null
-    userTeamList = document.getElementsByName("team_value")
-    userPositionList = document.getElementsByName("position_value")
-
-    for(var i=0;i<userTeamList.length;i++){
-        if(userTeamList[i].checked == true){
-            userTeam = userTeamList[i].value
+        if(navStyleRight == "-300px"){
+            nav.style.right = "0"
+        }else {
+            nav.style.right="-300px"
         }
     }
-    for(var i=0;i<userPositionList.length;i++){
-        if(userPositionList[i].checked == true){
-            userPosition = userPositionList[i].value
+    function formEvent(){
+        var userName = document.getElementById("input_name").value
+        var userPhonenumber = document.getElementById("input_phonenumber").value
+        var userTeam = null
+        var userPosition = null
+        userTeamList = document.getElementsByName("team_value")
+        userPositionList = document.getElementsByName("position_value")
+
+        for(var i=0;i<userTeamList.length;i++){
+            if(userTeamList[i].checked == true){
+                userTeam = userTeamList[i].value
+            }
+        }
+        for(var i=0;i<userPositionList.length;i++){
+            if(userPositionList[i].checked == true){
+                userPosition = userPositionList[i].value
+            }
+        }
+        if(!userName?.trim() || !userPhonenumber?.trim() || !userTeam?.trim() || !userPosition?.trim() ){
+            alert("값을 입력해주세요")
+            return false
         }
     }
-    if(!userName?.trim() || !userPhonenumber?.trim() || !userTeam?.trim() || !userPosition?.trim() ){
-        alert("값을 입력해주세요")
-        return false
-    }
-
-}
 
 </script>
 </body>
 </html>
+
+

@@ -81,105 +81,103 @@
 </body>
 
 <script>
-//전역변수
-var idBanner = document.getElementById("id_banner")
+    //전역변수
+    var idBanner = document.getElementById("id_banner")
 
-//이벤트 설정
-//회원가입 버튼
-function checkEvent(){
-    var checkBtn = document.getElementById("btn_check")
-    
-    //아이디 정규표현식
-    var idRegex = /^[a-zA-Z가-힣][a-zA-Z가-힣0-9]{0,19}$/
-    var id = document.getElementById("input_id").value
+    //이벤트 설정
+    //회원가입 버튼
+    function checkEvent(){
+        var checkBtn = document.getElementById("btn_check")
+        
+        //아이디 정규표현식
+        var idRegex = /^[a-zA-Z가-힣][a-zA-Z가-힣0-9]{0,19}$/
+        var id = document.getElementById("input_id").value
 
-    var pwRegex = /^(?=.*[\w])(?=.*[0-9])(?=.*[^\w\d]).{1,20}$/
-    var pw = document.getElementById("input_pw").value.trim()
-    var pw_check = document.getElementById("input_pw_check").value.trim()
-    console.log(pw)
+        var pwRegex = /^(?=.*[\w])(?=.*[0-9])(?=.*[^\w\d]).{1,20}$/
+        var pw = document.getElementById("input_pw").value.trim()
+        var pw_check = document.getElementById("input_pw_check").value.trim()
+        console.log(pw)
 
-    var nameRegex = /^[가-힣]{2,4}$/
-    var name = document.getElementById("input_name").value.trim()
+        var nameRegex = /^[가-힣]{2,4}$/
+        var name = document.getElementById("input_name").value.trim()
 
-    var phonenumberRegex = /^[0-9]{10,11}$/
-    var phonenumber = document.getElementById("input_phonenumber").value.trim().replace(/[^0-9]g/,"")
+        var phonenumberRegex = /^[0-9]{10,11}$/
+        var phonenumber = document.getElementById("input_phonenumber").value.trim().replace(/[^0-9]g/,"")
 
-    var teamTagList = document.getElementsByName("team_value")
-    var positionTagList = document.getElementsByName("position_value")
+        var teamTagList = document.getElementsByName("team_value")
+        var positionTagList = document.getElementsByName("position_value")
 
-    for(var i=0;i<teamTagList.length;i++){ // 체크된 radio 찾기
-        if(teamTagList[i].checked == true){
-            team = teamTagList[i].value;
-            break;
+        for(var i=0;i<teamTagList.length;i++){ // 체크된 radio 찾기
+            if(teamTagList[i].checked == true){
+                team = teamTagList[i].value;
+                break;
+            }
         }
-    }
-    for(var j=0;j<positionTagList.length;j++){
-        if(positionTagList[j].checked == true){
-            position=positionTagList[j].value;
-            break;
+        for(var j=0;j<positionTagList.length;j++){
+            if(positionTagList[j].checked == true){
+                position=positionTagList[j].value;
+                break;
+            }
         }
+
+        if(!id || !pw || !pw_check || !name || !phonenumber || !team || !position){ // 하나라도 널값이라면
+        alert("필수값 입력해주세요")
+        return false
+        }else if(pw != pw_check){
+            alert("비밀번호가 일치하지 않습니다")
+            return false
+        }else if(checkBtn.disabled==false){ // 아이디 중복확인이 안되어있다면, 
+            alert("아이디 중복검사를 진행해주세요")
+            return false
+        }else if(!(idRegex.test(id))){
+            alert("아이디 20글자이하,첫글자 문자")
+            return false
+        }else if(!(pwRegex.test(pw))){
+            console.log(pwRegex.test(pw))
+            alert("비밀번호 문자,숫자,특수문자 포함 20글자이하")
+            return false
+        }else if( !nameRegex.test(name) ){
+            alert("이름 한글 2~4글자")
+            return false
+        }else if(!phonenumberRegex.test(phonenumber)){
+            alert("전화번호 숫자10,11글자")
+            return false
+        }
+
     }
 
-    if(!id || !pw || !pw_check || !name || !phonenumber || !team || !position){ // 하나라도 널값이라면
-       alert("필수값 입력해주세요")
-       return false
-    }else if(pw != pw_check){
-        alert("비밀번호가 일치하지 않습니다")
-        return false
-    }else if(checkBtn.disabled==false){ // 아이디 중복확인이 안되어있다면, 
-        alert("아이디 중복검사를 진행해주세요")
-        return false
-    }else if(!(idRegex.test(id))){
-        alert("아이디 20글자이하,첫글자 문자")
-        return false
-    // }else if(!(pwRegex.test(pw))){
-    //     console.log(pwRegex.test(pw))
-    //     alert("비밀번호 문자,숫자,특수문자 포함 20글자이하")
-    //     return false
-    }else if( !nameRegex.test(name) ){
-        alert("이름 한글 2~4글자")
-        return false
-    }else if(!phonenumberRegex.test(phonenumber)){
-        alert("전화번호 숫자10,11글자")
-        return false
+    function checkBtnEvent(){
+        let checkBtn = document.getElementById("btn_check")
+        let idBanner = document.getElementById("id_banner")
+        console.log("중복버튼활성화")
+        checkBtn.disabled=false
+        checkBtn.style.backgroundColor="royalblue"
+        idBanner.innerHTML=""
     }
+    function idCheckEvent(){
+        var id = document.getElementById("input_id").value
+        var idRegex = /^[a-zA-Z가-힣][a-zA-Z가-힣0-9]{0,19}$/g
+        var url = "../action/idCheckAction.jsp?inputID=" + encodeURIComponent(id)
 
-}
-
-function checkBtnEvent(){
-    let checkBtn = document.getElementById("btn_check")
-    let idBanner = document.getElementById("id_banner")
-    console.log("중복버튼활성화")
-    checkBtn.disabled=false
-    checkBtn.style.backgroundColor="royalblue"
-    idBanner.innerHTML=""
-}
-function idCheckEvent(){
-    var id = document.getElementById("input_id").value
-    var idRegex = /^[a-zA-Z가-힣][a-zA-Z가-힣0-9]{0,19}$/g
-    var url = "../action/idCheckAction.jsp?inputID=" + encodeURIComponent(id)
-
-
-    if(!id ){ // 하나라도 널값이라면
-       alert("필수값 입력해주세요")
-       return false
+        if(!id ){ // 하나라도 널값이라면
+        alert("필수값 입력해주세요")
+        return false
+        }
+        if(!(idRegex.test(id))){
+            alert("아이디 20글자이하,첫글자 문자")
+        return false
+        }
+        window.open(url,"_blank")
+        
+        // window.open()
+        // 팝업창으로 띄우고, 위에서 가져온 idValue를 보내주는 방법으로
+        // 해당 팝업창에서 백엔드 통신을 통해 아이디 중복체크 진행
+        // 해당 결과를 부모 페이지인 이 페이지로 받아오는 것 까지
     }
-    if(!(idRegex.test(id))){
-        alert("아이디 20글자이하,첫글자 문자")
-       return false
+    function moveToDestEvent(e){
+        console.log(e)
+        location.href=e
     }
-    window.open(url,"_blank")
-    
-    // window.open()
-    // 팝업창으로 띄우고, 위에서 가져온 idValue를 보내주는 방법으로
-    // 해당 팝업창에서 백엔드 통신을 통해 아이디 중복체크 진행
-    // 해당 결과를 부모 페이지인 이 페이지로 받아오는 것 까지
-}
-
-function moveToDestEvent(e){
-    console.log(e)
-    location.href=e
-}
 
 </script>
 </body>

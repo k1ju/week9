@@ -1,5 +1,13 @@
 <%@ page language="java" contentType="text/html" pageEncoding="utf-8" %>
 
+<%
+//세션갖고 로그인창 접근금지
+String userIdx = (String)session.getAttribute("userIdx");
+
+if(userIdx != null){
+    response.sendRedirect("schedule.jsp");
+}
+%>
 
 <head>
     <meta charset="UTF-8">
@@ -26,16 +34,14 @@
 
 <script>
     function moveToDestEvent(e){ //함수"이벤트"쓰기, 매개변수이름변경
-        console.log("클릭")
         location.href=e
     }
 
     function checkEvent(){
-
         var idRegex = /^[a-zA-Z가-힣][a-zA-Z가-힣0-9]{0,19}$/
         var id = document.getElementById("input_id").value
 
-        var pwRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{1,20})$/
+        var pwRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{1,20}$/
         var pw = document.getElementById("input_pw").value
 
         if(!id || !pw){ 

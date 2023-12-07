@@ -11,7 +11,6 @@
 <%
 request.setCharacterEncoding("utf-8");
 
-
 String userIdx = null;
 String date = null;
 String time = null;
@@ -37,7 +36,7 @@ try{
     time = request.getParameter("time_value");
     dateTime = date + " " + time;
     content = request.getParameter("content_value");
-    executionStatus = "0";
+    executionStatus = 
 
     if(userIdx == null){
         throw new Exception();

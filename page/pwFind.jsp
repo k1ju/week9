@@ -20,31 +20,30 @@
 
 <script>
 
-function pwFindEvent(){
+    function pwFindEvent(){
+        var idValue = document.getElementById("input_id").value
+        var idRegex = /^[a-zA-Z가-힣][a-zA-Z가-힣0-9]{0,19}$/
 
-    var idValue = document.getElementById("input_id").value
-    var idRegex = /^[a-zA-Z가-힣][a-zA-Z가-힣0-9]{0,19}$/
+        var nameValue = document.getElementById("input_name").value
+        var nameRegex = /^[가-힣]{2,4}$/
 
-    var nameValue = document.getElementById("input_name").value
-    var nameRegex = /^[가-힣]{2,4}$/
+        var phonenumberValue = document.getElementById("input_phonenumber").value.trim()
+        var phonenumberRegex = /^[0-9]{10,11}$/
 
-    var phonenumberValue = document.getElementById("input_phonenumber").value.trim()
-    var phonenumberRegex = /^[0-9]{10,11}$/
-
-    if(!idValue || !nameValue || !phonenumberValue ){
-        alert("값을 입력하세요")
-        return false
-    }else if(!(pwRegex.test(pw))){
-        console.log("비밀번호 문자,숫자,특수문자 포함 20글자이하")
-        return false
-    }else if( !nameRegex.test(name) ){
-        console.log("이름 한글 2~4글자")
-        return false
-    }else if(!phonenumberRegex.test(phonenumber)){
-        console.log("전화번호 숫자10,11글자")
-        return false
+        if(!idValue || !nameValue || !phonenumberValue ){
+            alert("값을 입력하세요")
+            return false
+        }else if(!(pwRegex.test(pw))){
+            console.log("비밀번호 문자,숫자,특수문자 포함 20글자이하")
+            return false
+        }else if( !nameRegex.test(name) ){
+            console.log("이름 한글 2~4글자")
+            return false
+        }else if(!phonenumberRegex.test(phonenumber)){
+            console.log("전화번호 숫자10,11글자")
+            return false
+        }
     }
-}
 
 </script>
 </body>

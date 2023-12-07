@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html" pageEncoding="utf-8" %>
+<!-- <%@ page language="java" contentType="text/html" pageEncoding="utf-8" %>
 <!-- 데이터베이스 탐색라이브러리 -->
 <%@ page import="java.sql.DriverManager" %>
 <!-- db연결 라이브러리 -->
@@ -150,6 +150,7 @@ try{
     <title>Document</title>
     <link rel="stylesheet" type="text/CSS" href="../css/schedule.css">
     <link rel="stylesheet" type="text/CSS" href="../css/common.css">
+
 </head>
 <body>
 
@@ -208,182 +209,83 @@ try{
     </main>
 
 </body>
-<script>
-//전역 코드 모아놓기
-var date = new Date()
-var selectYear = <%=year%>
-var selectMonth = <%=month%>
-var selectDay = <%=day%>
-var ownerName = "<%=ownerName%>"
-var ownerPhonenumber = "<%=ownerPhonenumber%>" 
-var memberList = <%=memberList%>
-var scheduleList = <%=scheduleList%>
 
-console.log("멤버리스트:",memberList)
-console.log("유저idx",<%=userIdx%>)
-console.log("ownerName","<%=ownerName%>")
-console.log("ownerPhonenumber","<%=ownerPhonenumber%>")
-console.log("ownerIdx",<%=ownerIdx%>)
+<!-- 에러발생 -->
+<script >
 
-var ownerCalender = document.getElementById("owner_calender")
-var calender = document.getElementById("calender")
-var dayBtnList = document.getElementsByClassName("dayBtn")
+    // //전역 코드 모아놓기
+    var date = new Date()
+    var selectYear = <%=year%>
+    var selectMonth = <%=month%>
+    var selectDay = <%=day%>
+    var userIdx = "<%=userIdx%>"
+    var ownerIdx = "<%=ownerIdx%>"
+    var ownerName = "<%=ownerName%>"
+    var ownerPhonenumber = "<%=ownerPhonenumber%>" 
+    var memberList = <%=memberList%>
+    var scheduleList=<%=scheduleList%> //날짜, 일정,수행여부 순서
 
+    console.log("선택월",selectMonth)
 
-//현재날짜 표시  
-document.getElementById("current_date").innerHTML = date.getFullYear() + "-" +  (date.getMonth() + 1) + "-" + date.getDate();
+    function moveToDestEvent(e){
+        location.href=e
+    }
 
-//함수선언
+    function monthBtnEvent(e){
+        var id = e.target.id
+        var index = id.split("_")[2] //인덱스는 현재월
+        var ownerCalender = document.getElementById("owner_calender")
+        var monthChecked = document.getElementById("month_checked_"+index)
+        var monthBtn = document.getElementById("month_btn_"+index)
 
-makeCalenderName(ownerName,selectYear,selectMonth)
-makeCalender(selectMonth)
-teamMember(memberList)
-
-// 월 버튼 생성
-for(var i=0;i<12;i++){
-    let monthBtn = document.createElement("button")
-    let monthName = document.createElement("div")
-    let monthChecked = document.createElement("div")
-
-    monthBtn.classList.add("month_btn")
-    monthBtn.id ='month_btn' + (i+1)
-
-    monthName.classList.add("name_month")
-    monthName.innerHTML = (i+1) + "월"
-
-    monthChecked.innerHTML = "V"
-    monthChecked.style.display = "none"
-    monthChecked.id='month_checked' + (i+1)
-
-    monthBtn.appendChild(monthName)
-    monthBtn.appendChild(monthChecked)
-    document.getElementById("month_btn_box").appendChild(monthBtn)
-
-    monthBtn.addEventListener('click',function(){
-        selectMonth= parseInt(monthBtn.id.replace(/[^0-9]/g,""))
-        
-        for(var i=0; i<12; i++){
-            document.getElementById("month_checked"+(i+1)).style.display="none"
-        }
+        console.log("선택 id",id)
+        console.log("선택 index",index)
+        console.log("선택월",selectMonth)
+                
+        document.getElementById("month_checked_"+(selectMonth)).style.display="none"
+        selectMonth = index 
+        var url = "schedule.jsp?ownerName=" + ownerName + "&ownerPhonenumber=" + ownerPhonenumber + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
         monthChecked.style.display="block"
-
-        ownerCalender.innerHTML = ownerName + "팀원의 " + selectYear + "년" + selectMonth + "월 일정"
 
         makeCalenderName(ownerName,selectYear,selectMonth)
         makeCalender(selectMonth)
-        let url = "schedule.jsp?ownerName=" + ownerName + "&ownerPhonenumber=" + ownerPhonenumber + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
         window.open(url,"_self")
-    })
-}
-
-document.getElementById("month_checked" + (selectMonth)).style.display="block"
-
-
-//함수정의
-
-function moveToDestEvent(e){
-    location.href=e
-}
-function makeCalenderName(ownerName,selectYear,selectMonth){
-    ownerCalender.innerHTML = ownerName + "팀원의 " + selectYear + "년 " + selectMonth + "월 일정"
-}
-function teamMember(memberList){//2차원리스트, 이름,전화번호순
-    for(var i=0;i<memberList.length;i++){
-        var member = document.createElement("a")
-        member.innerHTML=memberList[i][0] + " : " + memberList[i][1].substring(0,3) + "-" + memberList[i][1].substring(3,7) + "-" + memberList[i][1].substring(7,11)             
-        member.classList.add("member")
-        member.href= "schedule.jsp?ownerName=" + memberList[i][0] + "&ownerPhonenumber=" + memberList[i][1] 
-        //이름,전화번호 전달
-        document.getElementById("team_member").appendChild(member)
     }
-}
-//날짜 생성함수
-function makeCalender(selectMonth){
-    scheduleList=<%=scheduleList%> //날짜, 일정,수행여부 순서
-    console.log("스케쥴리스트:",scheduleList)
-    var maxDay = 0
-    if (selectMonth ==2){
-        maxDay=28
-    } else if(selectMonth== 1 || selectMonth== 3 || selectMonth== 5 || selectMonth== 5 ||
-    selectMonth== 7 || selectMonth== 8 || selectMonth== 10 || selectMonth== 12 ){
-        maxDay = 31
-    } else {
-        maxDay=30
+    function dayBtnEvent(e){
+        var id = e.target.id
+        var index = id.split("_")[2]
+        console.log("id",id)
+        console.log("index",index)
+
+        url= "modal.jsp?ownerName=" + ownerName + "&ownerPhonenumber=" + ownerPhonenumber + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
+        url+= "&selectDay=" + index
+        window.open(url,"_blank","width=700,height=400") // 모달 새창으로 열기
     }
 
-    calender.innerHTML=""
-    for(let i=0;i<5;i++){
-        var trTag = document.createElement("tr")
-        calender.appendChild(trTag)
-        trTag.classList.add("tr_tag")
-        for(let j=0; j<7;j++){
-            let tdTag = document.createElement("td")
-            let dayBtn = document.createElement("button")
-            let scheduleCount = 0
-            let scheduleLine = document.createElement("div")
-            
-            for(let k=0; k<scheduleList.length; k++){
-                if(scheduleList[k][0].substring(8,10) == (i*7)+(j+1)){
-                    scheduleCount++
-                }
-            }
-
-            tdTag.className="tdTag"
-            dayBtn.className="dayBtn"
-            scheduleLine.className="scheduleLine"
-            tdTag.appendChild(dayBtn)
-            if ((j+1)+(i*7) > maxDay){
-                break
-            }
-            dayBtn.innerHTML = (j+1)+(i*7)
-            trTag.appendChild(tdTag)
-            dayBtn.appendChild(scheduleLine)
-
-            if(scheduleCount!=0){
-                scheduleLine.innerHTML = scheduleCount
-            }else{
-                scheduleLine.style.display="none"
-            }
-            //반복문으로 만든 여러개의 개체에 동시에 이벤트부여하는 것은 addevent가 더 낫다
-            dayBtn.addEventListener('click',function(){
-                var dayNum = parseInt(j+1) + parseInt(i*7)
-                url= "modal.jsp?ownerName=" + ownerName + "&ownerPhonenumber=" + ownerPhonenumber + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
-                url+= "&selectDay=" + dayNum
-                window.open(url,"_blank","width=700,height=400") // 모달 새창으로 열기
-            })
+    // 다음연도, 이전연도 버튼 이벤트
+    function beforeYearEvent(){
+        selectYear -= 1
+        url = "schedule.jsp?ownerName=" + ownerName + "&ownerPhonenumber=" + ownerPhonenumber + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
+        window.open(url,"_self")
+    }
+    function afterYearEvent(){
+        selectYear += 1
+        url = "schedule.jsp?ownerName=" + ownerName + "&ownerPhonenumber=" + ownerPhonenumber + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
+        window.open(url,"_self")
+    }
+    //슬라이드바 토글
+    function menuBarEvent(){
+        var nav = document.getElementById("navigation")
+        var navStyleRight = window.getComputedStyle(nav).getPropertyValue("right")
+        if(navStyleRight == "-300px"){
+            nav.style.right = "0"
+        }else {
+            nav.style.right="-300px"
         }
     }
-}
-// 모달열기, 함수명에 이벤트쓰기
-// function getModalEvent(){
-//     url= "scheduleShowAction.jsp?selectYear=" + selectYear + "&selectMonth=" + selectMonth
-//     url+= "&selectDay=" + selectDay
-//     window.open("modal.jsp","_blank","width=700,height=400")
-// }
-// 다음연도, 이전연도 버튼 이벤트
-function beforeYearEvent(){
-    selectYear -= 1
-    url = "schedule.jsp?ownerName=" + ownerName + "&ownerPhonenumber=" + ownerPhonenumber + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
-    window.open(url,"_self")
-}
-function afterYearEvent(){
-    selectYear += 1
-    url = "schedule.jsp?ownerName=" + ownerName + "&ownerPhonenumber=" + ownerPhonenumber + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
-    window.open(url,"_self")
-}
-//슬라이드바 토글
-function menuBarEvent(){
-    var nav = document.getElementById("navigation")
-    var navStyleRight = window.getComputedStyle(nav).getPropertyValue("right")
-    if(navStyleRight == "-300px"){
-        nav.style.right = "0"
-    }else {
-        nav.style.right="-300px"
-    }
-}
-//createElement같은 이벤트함수 아닌건 js로빼기
 
 </script>
+<script src="../js/schedule.js"></script>
 
 </body>
 </html>

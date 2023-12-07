@@ -20,25 +20,24 @@
 </body>
 
 <script>
-function idFindEvent(){
-    var nameRegex = /^[가-힣]{2,4}$/
-    var name = document.getElementById("input_name").value
+    function idFindEvent(){
+        var nameRegex = /^[가-힣]{2,4}$/
+        var name = document.getElementById("input_name").value
 
-    var phonenumberRegex = /^[0-9]{10,11}$/
-    console.log("기록")
-    var phonenumber = document.getElementById("input_phonenumber").value
+        var phonenumberRegex = /^[0-9]{10,11}$/
+        var phonenumber = document.getElementById("input_phonenumber").value
 
-    if(!name || !phonenumber){
-        alert("값을 입력하세요")
-        return false
-    } else if( !nameRegex.test(name) ){
-        console.log("이름 한글 2~4글자")
-        return false
-    }else if(!phonenumberRegex.test(phonenumber)){
-        console.log("전화번호 숫자 10,11글자")
-        return false
+        if(!name || !phonenumber){
+            alert("값을 입력하세요")
+            return false
+        } else if( !nameRegex.test(name) ){
+            console.log("이름 한글 2~4글자")
+            return false
+        }else if(!phonenumberRegex.test(phonenumber)){
+            console.log("전화번호 숫자 10,11글자")
+            return false
+        }
     }
-}
     
 </script>
 </body>
