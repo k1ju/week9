@@ -26,25 +26,25 @@
     flex-direction: row;
 }
 .month_btn{
-    /* text-size-adjust: auto; */
     font-size: 1.25rem;
     font-weight: 700;
-    width: 200px;
-    height: 80px;
+    width: calc(100%/12);
+    height: 60px;
     box-sizing: border-box; 
     /* 여백,테두리가 요소 전체의 크기에 영향을 미치지 않는다, content-box(여백,테두리가 크기에 추가됨)가 기본값. */
     background-color: royalblue;
     color: white;
     border: 0;
     margin: 0.5px;
+    padding-bottom: 0;
     display: flex;
     flex-direction: column;
     justify-content: start;
     align-items: center;
 }
+
 .name_month{
     height: 48%;
-    /* border: black solid 2px; */
 }
 .checked{
     display: block;
@@ -69,9 +69,6 @@
 .tr_tag{
     width: 100%;
     height: 20%;
-}
-.tdTag{
-
 }
 .dayBtn{
     margin:0;

@@ -14,7 +14,7 @@
         <form class="form"action="../action/idFindAction.jsp" onsubmit="return idFindEvent()">
             <input id="input_name" class="input" type="text" placeholder="이름" name="name_value">
             <input id="input_phonenumber" class="input" type="text" placeholder="연락처" name="phonenumber_value">
-            <input id="idFind_btn" class="Btn" type="submit" value="아이디찾기">
+            <input  class="Btn" type="submit" value="아이디찾기">
         </form>
     </div>
 </body>

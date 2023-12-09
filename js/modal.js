@@ -7,17 +7,23 @@ var  day = day
     
 
 console.log("스케쥴리스트",scheduleList)
-document.getElementById("today_date").innerHTML = year + "-" + month + "-" + day + "일정"
+document.getElementById("today_date").innerHTML = year + "-" + month + "-" + day + " 일정"
 makeArticle(scheduleList)
 
 //모달내 일정생성하기
 function makeArticle(list){
     var modal = document.getElementById("modal")
     var modalContent = document.getElementById("modal_content")
+    if(list.length > 5){
+        // modalContent.style.overflowY = "scroll";
+        document.getElementsByTagName("body")[0].style.overflowY = "auto";
+    }
 
     for(var i=0;i< list.length;i++){
         var article = document.createElement("article") // 변수를 let으로 선언하여 블럭안에서 변수값유지
         var form = document.createElement("form")
+        var formTodoSection = document.createElement("div")
+        var formBtnSection = document.createElement("div") 
         var checkbox = document.createElement("input")
         var time = document.createElement("div")
         var todo = document.createElement("div")
@@ -37,7 +43,10 @@ function makeArticle(list){
 
         form.classList.add("article_form")
         form.id = "form_"+i
-        
+
+        formTodoSection.classList.add("form_todo_section")
+        formBtnSection.classList.add("form_btn_section")
+
         checkbox.type="checkbox"
         checkbox.id= "checkbox_" + i
         checkbox.classList.add("article_checkbox")
@@ -92,7 +101,6 @@ function makeArticle(list){
         confirmBtn.id="confirm_btn_"+i
         confirmBtn.classList.add("article_btn")
         confirmBtn.classList.add("display_none")
-
         confirmBtn.onclick = updateEvent
 
         articleIdx.type = "hidden"
@@ -109,18 +117,20 @@ function makeArticle(list){
         console.log("데이트의 값",date.value)
 
         article.appendChild(form)
-        form.appendChild(executionStatus)
-        form.appendChild(checkbox)
-        form.appendChild(time)
-        form.appendChild(timeUpdate)
-        form.appendChild(todo)
-        form.appendChild(todoUpdate)
-        form.appendChild(confirmBtn)
-        form.appendChild(updateBtn)
-        form.appendChild(deleteBtn)
-        form.appendChild(articleIdx)
-        form.appendChild(ownerIdx)
-        form.appendChild(date)
+        form.appendChild(formTodoSection)
+        form.appendChild(formBtnSection)
+        formTodoSection.appendChild(executionStatus)
+        formTodoSection.appendChild(checkbox)
+        formTodoSection.appendChild(time)
+        formTodoSection.appendChild(timeUpdate)
+        formTodoSection.appendChild(todo)
+        formTodoSection.appendChild(todoUpdate)
+        formBtnSection.appendChild(confirmBtn)
+        formBtnSection.appendChild(updateBtn)
+        formBtnSection.appendChild(deleteBtn)
+        formTodoSection.appendChild(articleIdx)
+        formTodoSection.appendChild(ownerIdx)
+        formTodoSection.appendChild(date)
         modalContent.appendChild(article)
     }
 }

@@ -17,11 +17,13 @@ String userName = null;
 String userPhonenumber = null; 
 String userPosition = null;
 String userTeam = null;
+String sql = null;
 
 ResultSet rs = null;
 PreparedStatement query = null;
 Connection connect = null;
 
+ArrayList<ArrayList<String>> memberList = new ArrayList<ArrayList<String>>();
 
 try{
     userIdx = (String)session.getAttribute("userIdx");
@@ -33,10 +35,43 @@ try{
     if(userIdx == null){
         throw new Exception();
     }
+   
+
+    // 팀원명단 가져오기sql
+    if(userPosition.equals("팀장")){ // 문자열 비교는 equals
+        Class.forName("com.mysql.jdbc.Driver"); //db연결
+        connect = DriverManager.getConnection("jdbc:mysql://localhost/week9","stageus","1234");
+        sql = "SELECT name,phonenumber FROM account WHERE team = (SELECT team FROM account WHERE idx = ?)";
+        query = connect.prepareStatement(sql);
+        query.setString(1,userIdx);
+        rs = query.executeQuery();
+        
+        while(rs.next()){
+            ArrayList<String> member = new ArrayList<String>();
+            String name = rs.getString(1);
+            String phonenumber = rs.getString(2);
+
+            member.add("\"" + name + "\"");
+            member.add("\"" + phonenumber + "\"");
+            memberList.add(member);
+        }
+    }
+
 
     
 }catch(Exception e){
     response.sendRedirect("index.jsp");
+    return;
+}finally{
+    if (rs != null) {
+        rs.close();
+    }
+    if (query != null) {
+        query.close();
+    }
+    if (connect != null) {
+        connect.close();
+    }
 }
 
 %>
@@ -139,6 +174,7 @@ try{
 
     var userTeam = "<%=userTeam%>"
     var userPosition = "<%=userPosition%>"
+    var memberList = <%=memberList%>
 
     function moveToDestEvent(e){
         location.href=e

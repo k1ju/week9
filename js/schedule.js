@@ -45,7 +45,6 @@
         document.getElementById("month_btn_box").appendChild(monthBtn)
 
         monthBtn.onclick= monthBtnEvent
-
     }
 
     document.getElementById("month_checked_" + (selectMonth)).style.display="block"

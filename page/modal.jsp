@@ -47,7 +47,6 @@ try{
     if(ownerName != null){
         sql2 = "SELECT idx FROM account WHERE name = ? AND phonenumber = ?";
         query2 = connect.prepareStatement(sql2);
-
         query2.setString(1,ownerName);
         query2.setString(2,ownerPhonenumber);
         rs2 = query2.executeQuery();
@@ -87,7 +86,7 @@ try{
 
 }catch(Exception e){
     e.printStackTrace();
-    //response.sendRedirect("index.jsp");
+    response.sendRedirect("index.jsp");
 }finally{
     if (rs != null) {
         rs.close();
@@ -114,8 +113,6 @@ try{
 <body>
     
 <!-- 모달 -->
-<!-- 제목: 선택날짜
-내용: 선택날짜 일정 -->
     <section id="modal">
         <h2 id="today_date">모달창 제목</h2> 
         <div id="modal_content">
@@ -125,7 +122,6 @@ try{
             <input id="plan_time" type="time" name="new_time_value">
             <!-- 시간 다이얼식으로 변경 -->
             <input id = "input_plan" type="text" name="new_content_value">
-            <!-- <button id="btn_insert">확인 -->
             <input type="submit" id="btn_insert" value="확인">
             <input type="hidden" name="new_date_value">
             <input type="hidden" name="new_owner_idx_value">

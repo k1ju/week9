@@ -22,7 +22,7 @@ if(userIdx != null){
         <form action="../action/loginAction.jsp" onsubmit="return checkEvent()">
             <input class="input" id="input_id" type="text" placeholder="ID" name="id_value">
             <input class="input" id="input_pw" type="password" placeholder="PASSWORD" name="pw_value">
-            <input id="login_btn"  type="submit" value="로그인">
+            <input class="login_btn"  type="submit" value="로그인">
         </form>
         <button id="join_btn" class="Btn" onclick="moveToDestEvent('join.jsp')" >회원가입</button>
         <div id="find_btn_box">
@@ -56,8 +56,6 @@ if(userIdx != null){
             //return false
         //}
 
-        console.log(id)
-        console.log(pw)
     }
 </script>
 </body>

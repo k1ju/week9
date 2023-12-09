@@ -14,18 +14,16 @@
             <table>
                 <tr>
                     <th>아이디</th>
-                    <!-- <form id = "idCheckForm" action="idCheckAction.jsp" onsubmit="return idCheckEvent()"> 폼안에 폼은 쓸수없음. 지워진다.-->
-                        <td class="c2">
+                        <td class="c2"> 
+                            <!-- 폼안에 폼이있을 수 없어서, 버튼에 onclick으로 url정보싣는다 -->
                             <input id = "input_id"  type="text" placeholder="아이디" name="id_value" onkeydown="checkBtnEvent()">
                         </td>
                         <td class="c3"> 
-                            <!-- TODO: 이벤트 함수 밖으로 빼서 form태그 정상적으로 가져와지는지 출력으로 확인할 것 -->
                             <input id="btn_check" type="button" class = "check_btn" value="중복확인" onclick="idCheckEvent()">
                         </td>
                         <td class="c4">
                             <span id="id_banner"></span>
                         </td>
-                    <!-- </form> -->
                 </tr>
                 <tr>
                     <th>비밀번호</th>
@@ -150,7 +148,6 @@
     function checkBtnEvent(){
         let checkBtn = document.getElementById("btn_check")
         let idBanner = document.getElementById("id_banner")
-        console.log("중복버튼활성화")
         checkBtn.disabled=false
         checkBtn.style.backgroundColor="royalblue"
         idBanner.innerHTML=""

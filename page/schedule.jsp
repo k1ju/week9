@@ -1,4 +1,4 @@
-<!-- <%@ page language="java" contentType="text/html" pageEncoding="utf-8" %>
+<%@ page language="java" contentType="text/html" pageEncoding="utf-8" %>
 <!-- 데이터베이스 탐색라이브러리 -->
 <%@ page import="java.sql.DriverManager" %>
 <!-- db연결 라이브러리 -->
@@ -13,21 +13,17 @@
 <%
 request.setCharacterEncoding("utf-8");
 
-
 String sql=null;
 ResultSet rs = null;
 PreparedStatement query = null;
-
 String sql2=null;
 ResultSet rs2 = null;
 PreparedStatement query2 = null;
-
 String sql3=null;
 ResultSet rs3 = null;
 PreparedStatement query3 = null;
 Connection connect = null;
 
-Calendar calendar = Calendar.getInstance();
 String userIdx = null;
 String userName = null;
 String userPhonenumber = null;
@@ -36,6 +32,7 @@ String userTeam = null;
 String ownerName = null;
 String ownerPhonenumber = null;
 String ownerIdx = null;
+Calendar calendar = Calendar.getInstance();
 String year = null;
 String month = null;
 String day = null;
@@ -55,7 +52,7 @@ try{
     year = request.getParameter("selectYear");
     month = request.getParameter("selectMonth");
     day = request.getParameter("selectDay");
-
+//날짜초기값은 현재날짜
     if(year==null){
         year = Integer.toString(calendar.get(Calendar.YEAR));
     }
@@ -73,33 +70,31 @@ try{
     Class.forName("com.mysql.jdbc.Driver"); //db연결
     connect = DriverManager.getConnection("jdbc:mysql://localhost/week9","stageus","1234");
 
-    if(ownerName == null ){ // 오너이름이 따로 없다면
+    if(ownerName == null ){ // 오너이름없을때 내이름
         ownerName= userName;
         ownerPhonenumber = userPhonenumber;
         ownerIdx = userIdx;
-    }else{ // 오너이름있을때, 다른 사람스케쥴 볼때
-        sql3 = "SELECT idx FROM account WHERE name = ? AND phonenumber = ?";
-        query3 =  connect.prepareStatement(sql3);
-        query3.setString(1,ownerName);
-        query3.setString(2,ownerPhonenumber);
-        rs3 = query3.executeQuery();
-        rs3.next();
-        ownerIdx = rs3.getString(1);
+    }else{ // 오너이름있을때 (다른 사람스케쥴 볼때)
+        sql = "SELECT idx FROM account WHERE name = ? AND phonenumber = ?";
+        query =  connect.prepareStatement(sql);
+        query.setString(1,ownerName);
+        query.setString(2,ownerPhonenumber);
+        rs = query.executeQuery();
+        rs.next();
+        ownerIdx = rs.getString(1);
     }
 
-    sql = "SELECT date FROM schedule WHERE user_idx = ? AND YEAR(date) = ? AND MONTH(date) = ?  ";
-    query = connect.prepareStatement(sql);
+    sql2 = "SELECT date FROM schedule WHERE user_idx = ? AND YEAR(date) = ? AND MONTH(date) = ?  ";
+    query2 = connect.prepareStatement(sql2);
+    query2.setString(1,ownerIdx);
+    query2.setString(2,year);
+    query2.setString(3,month);
 
-    query.setString(1,ownerIdx);
-    query.setString(2,year);
-    query.setString(3,month);
-
-
-    rs = query.executeQuery();
+    rs2 = query2.executeQuery();
     
-    while(rs.next()){
+    while(rs2.next()){
         ArrayList<String> schedule = new ArrayList<String>();
-        String date = rs.getString(1);
+        String date = rs2.getString(1);
         schedule.add("\"" + date + "\"");
         scheduleList.add(schedule);
     }
@@ -107,15 +102,15 @@ try{
     // 팀원명단 가져오기sql
     if(userPosition.equals("팀장")){ // 문자열 비교는 equals
 
-        sql2 = "SELECT name,phonenumber FROM account WHERE team = (SELECT team FROM account WHERE idx = ?)";
-        query2 = connect.prepareStatement(sql2);
-        query2.setString(1,userIdx);
-        rs2 = query2.executeQuery();
+        sql3 = "SELECT name,phonenumber FROM account WHERE team = (SELECT team FROM account WHERE idx = ?)";
+        query3 = connect.prepareStatement(sql3);
+        query3.setString(1,userIdx);
+        rs3 = query3.executeQuery();
         
-        while(rs2.next()){
+        while(rs3.next()){
             ArrayList<String> member = new ArrayList<String>();
-            String name = rs2.getString(1);
-            String phonenumber = rs2.getString(2);
+            String name = rs3.getString(1);
+            String phonenumber = rs3.getString(2);
 
             member.add("\"" + name + "\"");
             member.add("\"" + phonenumber + "\"");
@@ -125,6 +120,7 @@ try{
 
 }catch(Exception e){
     response.sendRedirect("index.jsp");
+    return;
 }finally{
     if (rs != null) {
         rs.close();
@@ -137,6 +133,12 @@ try{
     }
     if (query2 != null) {
         query2.close();
+    }
+    if (rs3 != null) {
+        rs3.close();
+    }
+    if (query3 != null) {
+        query3.close();
     }
     if (connect != null) {
         connect.close();
@@ -210,7 +212,6 @@ try{
 
 </body>
 
-<!-- 에러발생 -->
 <script >
 
     // //전역 코드 모아놓기
@@ -225,7 +226,6 @@ try{
     var memberList = <%=memberList%>
     var scheduleList=<%=scheduleList%> //날짜, 일정,수행여부 순서
 
-    console.log("선택월",selectMonth)
 
     function moveToDestEvent(e){
         location.href=e
@@ -259,7 +259,7 @@ try{
 
         url= "modal.jsp?ownerName=" + ownerName + "&ownerPhonenumber=" + ownerPhonenumber + "&selectYear=" + selectYear + "&selectMonth=" + selectMonth
         url+= "&selectDay=" + index
-        window.open(url,"_blank","width=700,height=400") // 모달 새창으로 열기
+        window.open(url,"_blank","width=800,height=400") // 모달 새창으로 열기
     }
 
     // 다음연도, 이전연도 버튼 이벤트
